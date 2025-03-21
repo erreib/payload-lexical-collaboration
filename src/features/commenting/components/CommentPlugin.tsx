@@ -64,6 +64,92 @@ export const CommentPlugin: React.FC<CommentPluginProps> = ({
     setShowCommentInput(false)
   }, [editor])
 
+  // Function to save the document content
+  const saveDocument = useCallback(async () => {
+    try {
+      // Get the document ID from the URL or props
+      const docId = documentId || window.location.pathname.split('/').pop() || 'default';
+      
+      // Get the collection name from the URL path
+      const pathParts = window.location.pathname.split('/');
+      const collectionIndex = pathParts.findIndex(part => part === 'collections');
+      if (collectionIndex === -1) {
+        console.error('Could not determine collection from URL path');
+        return;
+      }
+      
+      const collection = pathParts[collectionIndex + 1];
+      if (!collection) {
+        console.error('Could not determine collection from URL path');
+        return;
+      }
+      
+      console.log(`Saving document: ${docId} in collection: ${collection}`);
+      
+      // First, try to get the current document to determine the field name
+      let fieldName = 'content'; // Default field name
+      
+      try {
+        const docResponse = await fetch(`/api/${collection}/${docId}`);
+        if (docResponse.ok) {
+          const docData = await docResponse.json();
+          
+          // Look for fields that might be rich text fields
+          const possibleFieldNames = Object.keys(docData).filter(key => {
+            // Check if the field value is an object and has properties that suggest it's a rich text field
+            const value = docData[key];
+            return (
+              typeof value === 'object' && 
+              value !== null && 
+              (value.root || value.type === 'root' || value.version)
+            );
+          });
+          
+          if (possibleFieldNames.length > 0) {
+            // Use the first field that looks like a rich text field
+            fieldName = possibleFieldNames[0];
+            console.log(`Detected rich text field name: ${fieldName}`);
+          } else {
+            console.log(`Could not detect rich text field, using default: ${fieldName}`);
+          }
+        }
+      } catch (error) {
+        console.warn('Error fetching document to determine field name:', error);
+        console.log(`Using default field name: ${fieldName}`);
+      }
+      
+      // Get the current editor state as JSON
+      const editorState = editor.getEditorState();
+      const editorStateJSON = JSON.stringify(editorState.toJSON());
+      
+      // Create the update payload with the detected field name
+      const updatePayload = {
+        [fieldName]: editorStateJSON
+      };
+      
+      console.log(`Updating document with field: ${fieldName}`);
+      
+      // Make an API call to update the document
+      const response = await fetch(`/api/${collection}/${docId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updatePayload),
+      });
+      
+      if (response.ok) {
+        console.log('Document saved successfully');
+      } else {
+        console.error('Failed to save document:', response.status, response.statusText);
+        const errorText = await response.text();
+        console.error('Error details:', errorText);
+      }
+    } catch (error) {
+      console.error('Error saving document:', error);
+    }
+  }, [documentId, editor]);
+
   const deleteCommentOrThread = useCallback(
     (comment: Comment | Thread, thread?: Thread) => {
       if (comment.type === 'comment') {
@@ -189,11 +275,16 @@ export const CommentPlugin: React.FC<CommentPluginProps> = ({
                 }
               }
             })
+            
+            // Save the document after removing comment marks
+            saveDocument().catch(error => {
+              console.error('Error saving document after deleting comment:', error);
+            });
           })
         }
       }
     },
-    [commentStore, editor, markNodeMap],
+    [commentStore, editor, markNodeMap, saveDocument],
   )
 
   const submitAddComment = useCallback(
@@ -216,9 +307,14 @@ export const CommentPlugin: React.FC<CommentPluginProps> = ({
           }
         })
         setShowCommentInput(false)
+        
+        // Save the document after adding a comment
+        saveDocument().catch(error => {
+          console.error('Error saving document after adding comment:', error);
+        });
       }
     },
-    [commentStore, editor],
+    [commentStore, editor, saveDocument],
   )
 
   useEffect(() => {
