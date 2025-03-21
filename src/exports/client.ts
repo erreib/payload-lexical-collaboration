@@ -1,2 +1,2 @@
-export { BeforeDashboardClient } from '../components/BeforeDashboardClient.js'
+// BeforeDashboardClient removed
 export { CommentClientFeature } from '../features/commenting/feature.client.js'

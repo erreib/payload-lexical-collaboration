@@ -125,20 +125,7 @@ export const payloadLexicalCollaboration =
       config.admin.components.beforeDashboard = []
     }
 
-    config.admin.components.beforeDashboard.push(
-      `payload-lexical-collaboration/client#BeforeDashboardClient`,
-    )
-    config.admin.components.beforeDashboard.push(
-      `payload-lexical-collaboration/rsc#BeforeDashboardServer`,
-    )
-
-    config.endpoints.push({
-      handler: () => {
-        return Response.json({ message: 'Hello from custom endpoint' })
-      },
-      method: 'get',
-      path: '/my-plugin-endpoint',
-    })
+    // Dashboard components and custom endpoints removed
 
     const incomingOnInit = config.onInit
 
