@@ -53,7 +53,8 @@ export const CommentPlugin: React.FC<CommentPluginProps> = ({
     setShowCommentInput,
     setShowComments,
     showComments,
-    showCommentInput
+    showCommentInput,
+    setActiveAnchorKey
   )
 
   // Highlight active comments
@@ -97,6 +98,8 @@ export const CommentPlugin: React.FC<CommentPluginProps> = ({
             cancelAddComment={cancelAddComment}
             submitAddComment={submitAddComment}
             author={currentUser}
+            setActiveAnchorKey={setActiveAnchorKey}
+            setShowCommentInput={setShowCommentInput}
           />,
           document.body,
         )}

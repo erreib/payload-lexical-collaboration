@@ -1,7 +1,7 @@
 'use client'
 
 import { useCallback, useEffect } from 'react'
-import type { LexicalEditor } from '@payloadcms/richtext-lexical/lexical'
+import type { LexicalEditor, NodeKey } from '@payloadcms/richtext-lexical/lexical'
 import {
   $getSelection,
   COMMAND_PRIORITY_CRITICAL,
@@ -17,6 +17,7 @@ import { INSERT_COMMENT_COMMAND, TOGGLE_COMMENTS_COMMAND } from '../../command.j
  * @param setShowComments Function to set whether to show comments
  * @param showComments Current state of showing comments
  * @param showCommentInput Current state of showing comment input
+ * @param setActiveAnchorKey Function to set the active anchor key
  * @returns Object with functions to handle comment commands
  */
 export function useCommentCommands(
@@ -24,7 +25,8 @@ export function useCommentCommands(
   setShowCommentInput: (show: boolean) => void,
   setShowComments: (show: boolean) => void,
   showComments: boolean,
-  showCommentInput: boolean
+  showCommentInput: boolean,
+  setActiveAnchorKey: (key: NodeKey | null) => void
 ) {
   // Cancel adding a comment
   const cancelAddComment = useCallback(() => {
@@ -36,7 +38,9 @@ export function useCommentCommands(
       }
     })
     setShowCommentInput(false)
-  }, [editor, setShowCommentInput])
+    // Reset the active anchor key to hide the AddCommentBox tooltip
+    setActiveAnchorKey(null)
+  }, [editor, setShowCommentInput, setActiveAnchorKey])
 
   // Add a comment
   const onAddComment = useCallback(() => {

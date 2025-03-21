@@ -1,6 +1,6 @@
 'use client'
 
-import type { LexicalEditor, RangeSelection } from '@payloadcms/richtext-lexical/lexical'
+import type { LexicalEditor, NodeKey, RangeSelection } from '@payloadcms/richtext-lexical/lexical'
 import type { Comment, Thread } from '../types.js'
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
@@ -20,6 +20,8 @@ type CommentInputBoxProps = {
     selection?: RangeSelection | null,
   ) => void
   author: string
+  setActiveAnchorKey: (key: NodeKey | null) => void
+  setShowCommentInput: (show: boolean) => void
 }
 
 export const CommentInputBox: React.FC<CommentInputBoxProps> = ({
@@ -27,6 +29,8 @@ export const CommentInputBox: React.FC<CommentInputBoxProps> = ({
   cancelAddComment,
   submitAddComment,
   author,
+  setActiveAnchorKey,
+  setShowCommentInput,
 }) => {
   const [content, setContent] = useState('')
   const [canSubmit, setCanSubmit] = useState(false)
@@ -140,6 +144,10 @@ export const CommentInputBox: React.FC<CommentInputBoxProps> = ({
         selectionRef.current,
       )
       selectionRef.current = null
+      // Reset the active anchor key to hide the AddCommentBox tooltip
+      setActiveAnchorKey(null)
+      // Close the comment input form
+      setShowCommentInput(false)
     }
   }
 
