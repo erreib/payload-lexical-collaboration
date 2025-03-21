@@ -20,7 +20,7 @@ export const payloadLexicalCollaboration =
 
     // Add the comments collection
     config.collections.push({
-      slug: 'comments',
+      slug: 'lexical-collaboration-plugin-comments',
       admin: {
         useAsTitle: 'content',
         defaultColumns: ['content', 'author', 'createdAt'],
@@ -68,7 +68,7 @@ export const payloadLexicalCollaboration =
         {
           name: 'parentComment',
           type: 'relationship',
-          relationTo: 'comments',
+          relationTo: 'lexical-collaboration-plugin-comments',
         }
       ]
     })

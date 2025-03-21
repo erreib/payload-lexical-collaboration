@@ -164,7 +164,7 @@ export const CommentPlugin: React.FC<CommentPluginProps> = ({
         
         // Mark as deleted in the database using Payload's built-in REST API
         console.log(`Marking comment as deleted: ${comment.id}`);
-        fetch(`/api/comments/${comment.id}`, {
+        fetch(`/api/lexical-collaboration-plugin-comments/${comment.id}`, {
           method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',
@@ -198,7 +198,7 @@ export const CommentPlugin: React.FC<CommentPluginProps> = ({
         // Mark thread as resolved in the database using Payload's built-in REST API
         // Update all comments with this threadId
         console.log(`Marking thread as deleted: ${comment.id}`);
-        const threadUrl = `/api/comments?where[threadId][equals]=${comment.id}`;
+        const threadUrl = `/api/lexical-collaboration-plugin-comments?where[threadId][equals]=${comment.id}`;
         console.log(`Fetching thread comments from: ${threadUrl}`);
         
         fetch(threadUrl, {
@@ -223,7 +223,7 @@ export const CommentPlugin: React.FC<CommentPluginProps> = ({
               data.docs.forEach((threadComment: any) => {
                 console.log(`Marking thread comment as deleted: ${threadComment.id}`);
                 
-                fetch(`/api/comments/${threadComment.id}`, {
+                fetch(`/api/lexical-collaboration-plugin-comments/${threadComment.id}`, {
                   method: 'PATCH',
                   headers: {
                     'Content-Type': 'application/json',

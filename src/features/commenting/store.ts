@@ -221,7 +221,7 @@ export class CommentStore {
       
       // Fetch comments from Payload API using the built-in REST API
       // Only fetch unresolved comments (not marked as deleted)
-      const url = `/api/comments?where[documentId][equals]=${encodeURIComponent(documentId)}&where[resolved][equals]=false&depth=2`;
+      const url = `/api/lexical-collaboration-plugin-comments?where[documentId][equals]=${encodeURIComponent(documentId)}&where[resolved][equals]=false&depth=2`;
       console.log(`Fetching comments from: ${url}`);
       
       const response = await fetch(url);
@@ -385,7 +385,7 @@ export class CommentStore {
             
             console.log('Saving comment with data:', commentData);
             
-            const saveResponse = await fetch('/api/comments', {
+            const saveResponse = await fetch('/api/lexical-collaboration-plugin-comments', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
@@ -434,7 +434,7 @@ export class CommentStore {
           
           console.log('Saving comment with data:', commentData);
           
-          const saveResponse = await fetch('/api/comments', {
+          const saveResponse = await fetch('/api/lexical-collaboration-plugin-comments', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
