@@ -15,18 +15,20 @@
 
 .CommentPlugin_AddCommentBox_button {
   border-radius: 20px;
-  border: 0;
-  background: none;
+  border: 1px solid var(--theme-elevation-200, #e0e0e0);
+  background-color: var(--theme-elevation-100, #f3f3f3);
+  color: white;
   width: 40px;
   height: 60px;
   position: absolute;
   top: 0;
   left: 0;
   cursor: pointer;
+  transition: all 0.2s ease;
 }
 
 .CommentPlugin_AddCommentBox_button:hover {
-  background-color: #f6f6f6;
+  background-color: var(--theme-elevation-150, #e6e6e6);
 }
 
 i.add-comment {
@@ -35,7 +37,7 @@ i.add-comment {
   height: 20px;
   width: 20px;
   vertical-align: -10px;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='currentColor' viewBox='0 0 16 16'%3E%3Cpath d='M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1h-2.5a2 2 0 0 0-1.6.8L8 14.333 6.1 11.8a2 2 0 0 0-1.6-.8H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2.5a1 1 0 0 1 .8.4l1.9 2.533a1 1 0 0 0 1.6 0l1.9-2.533a1 1 0 0 1 .8-.4H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z'/%3E%3Cpath d='M3 3.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zM3 6a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9A.5.5 0 0 1 3 6zm0 2.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5z'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='white' viewBox='0 0 16 16'%3E%3Cpath d='M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1h-2.5a2 2 0 0 0-1.6.8L8 14.333 6.1 11.8a2 2 0 0 0-1.6-.8H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2.5a1 1 0 0 1 .8.4l1.9 2.533a1 1 0 0 0 1.6 0l1.9-2.533a1 1 0 0 1 .8-.4H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z'/%3E%3Cpath d='M3 3.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zM3 6a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9A.5.5 0 0 1 3 6zm0 2.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5z'/%3E%3C/svg%3E");
 }
 
 @media (max-width: 600px) {
@@ -96,32 +98,38 @@ i.add-comment {
   padding: 8px 12px;
   border: none;
   border-radius: 4px;
-  background-color: #f0f0f0;
+  background-color: var(--theme-elevation-100, #f3f3f3);
+  color: var(--theme-elevation-800, #333333);
   cursor: pointer;
   font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.CommentPlugin_CommentInputBox_Button:hover {
+  background-color: var(--theme-elevation-150, #e6e6e6);
 }
 
 .CommentPlugin_CommentInputBox_Button.primary {
-  background-color: rgb(66, 135, 245);
+  background-color: var(--theme-brand, rgb(66, 135, 245));
   font-weight: bold;
-  color: #fff;
+  color: white;
 }
 
 .CommentPlugin_CommentInputBox_Button.primary:hover {
-  background-color: rgb(53, 114, 211);
+  background-color: var(--theme-brand-dark, rgb(53, 114, 211));
 }
 
 .CommentPlugin_CommentInputBox_Button[disabled] {
-  background-color: #eee;
-  opacity: 0.5;
+  background-color: var(--theme-elevation-200, #e9e9e9);
+  color: var(--theme-elevation-800, #333333);
   cursor: not-allowed;
   font-weight: normal;
-  color: #444;
+  opacity: 0.5;
 }
 
 .CommentPlugin_CommentInputBox_Button[disabled]:hover {
-  opacity: 0.5;
-  background-color: #eee;
+  background-color: var(--theme-elevation-200, #e9e9e9);
+  color: var(--theme-elevation-800, #333333);
 }
 
 .CommentPlugin_CommentInputBox_EditorContainer {
@@ -132,8 +140,8 @@ i.add-comment {
 
 .CommentPlugin_CommentInputBox_Editor {
   position: relative;
-  border: 1px solid #ccc;
-  background-color: #fff;
+  border: 1px solid var(--theme-elevation-200, #e0e0e0);
+  background-color: var(--theme-input-bg, #fff);
   border-radius: 5px;
   font-size: 15px;
   caret-color: rgb(5, 5, 5);
@@ -153,15 +161,17 @@ i.add-comment {
   position: fixed;
   top: 10px;
   right: 15px;
-  background-color: #ddd;
+  background-color: var(--theme-elevation-100, #f3f3f3);
+  color: white;
   border-radius: 10px;
-  border: none;
+  border: 1px solid var(--theme-elevation-200, #e0e0e0);
   padding: 8px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 20;
+  transition: all 0.2s ease;
 }
 
 i.comments {
@@ -170,8 +180,8 @@ i.comments {
   height: 20px;
   width: 20px;
   vertical-align: -10px;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='currentColor' viewBox='0 0 16 16'%3E%3Cpath d='M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4.414A2 2 0 0 0 3 11.586l-2 2V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.414 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z'/%3E%3Cpath d='M3 3.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zM3 6a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9A.5.5 0 0 1 3 6zm0 2.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5z'/%3E%3C/svg%3E");
-  opacity: 0.5;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='white' viewBox='0 0 16 16'%3E%3Cpath d='M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4.414A2 2 0 0 0 3 11.586l-2 2V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.414 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z'/%3E%3Cpath d='M3 3.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zM3 6a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9A.5.5 0 0 1 3 6zm0 2.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5z'/%3E%3C/svg%3E");
+  opacity: 0.8;
   transition: opacity 0.2s linear;
 }
 
@@ -181,12 +191,17 @@ i.comments {
   }
 }
 
+.CommentPlugin_ShowCommentsButton:hover {
+  background-color: var(--theme-elevation-150, #e6e6e6);
+}
+
 .CommentPlugin_ShowCommentsButton:hover i.comments {
   opacity: 1;
 }
 
 .CommentPlugin_ShowCommentsButton.active {
-  background-color: #ccc;
+  background-color: var(--theme-elevation-150, #e6e6e6);
+  color: var(--theme-elevation-900, #111111);
 }
 
 .CommentPlugin_CommentsPanel {
@@ -195,7 +210,7 @@ i.comments {
   width: 300px;
   height: calc(100% - 88px);
   top: 88px;
-  background-color: #fff;
+  background-color: var(--theme-elevation-150, #e6e6e6);
   border-top-left-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   animation: show-comments 0.2s ease;
@@ -214,22 +229,21 @@ i.comments {
 }
 
 .CommentPlugin_CommentsPanel_Heading {
-  padding-left: 15px;
-  padding-top: 10px;
+  padding: 15px 15px 12px;
   margin: 0;
-  height: 34px;
-  border-bottom: 1px solid #eee;
-  font-size: 20px;
+  border-bottom: 1px solid var(--theme-elevation-200, #e0e0e0);
+  font-size: 18px;
+  font-weight: 500;
   display: block;
   width: 100%;
-  color: #444;
+  color: var(--theme-elevation-800, #333333);
   overflow: hidden;
 }
 
 .CommentPlugin_CommentsPanel_Editor {
   position: relative;
-  border: 1px solid #ccc;
-  background-color: #fff;
+  border: 1px solid var(--theme-elevation-200, #e0e0e0);
+  background-color: var(--theme-input-bg, #fff);
   border-radius: 5px;
   font-size: 15px;
   caret-color: rgb(5, 5, 5);
@@ -273,8 +287,8 @@ i.send {
   height: 20px;
   width: 20px;
   vertical-align: -10px;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='currentColor' viewBox='0 0 16 16'%3E%3Cpath d='M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576 6.636 10.07Zm6.787-8.201L1.591 6.602l4.339 2.76 7.494-7.493Z'/%3E%3C/svg%3E");
-  opacity: 0.5;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23999999' viewBox='0 0 16 16'%3E%3Cpath d='M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576 6.636 10.07Zm6.787-8.201L1.591 6.602l4.339 2.76 7.494-7.493Z'/%3E%3C/svg%3E");
+  opacity: 0.7;
   transition: opacity 0.2s linear;
 }
 
@@ -294,7 +308,7 @@ i.send {
 }
 
 .CommentPlugin_CommentsPanel_Empty {
-  color: #777;
+  color: var(--theme-elevation-600, #666666);
   font-size: 15px;
   text-align: center;
   position: absolute;
@@ -308,12 +322,11 @@ i.send {
   padding: 0;
   list-style-type: none;
   margin: 0;
-  padding: 0;
   width: 100%;
   position: absolute;
-  top: 45px;
+  top: 52px; /* Adjusted to match the new header height */
   overflow-y: auto;
-  height: calc(100% - 45px);
+  height: calc(100% - 52px);
 }
 
 .CommentPlugin_CommentsPanel_List_Comment {
@@ -331,11 +344,11 @@ i.send {
 
 .CommentPlugin_CommentsPanel_List_Comment p {
   margin: 0;
-  color: #444;
+  color: var(--theme-elevation-800, #333333);
 }
 
 .CommentPlugin_CommentsPanel_List_Details {
-  color: #444;
+  color: var(--theme-elevation-800, #333333);
   padding-bottom: 5px;
   vertical-align: top;
 }
@@ -346,17 +359,17 @@ i.send {
 }
 
 .CommentPlugin_CommentsPanel_List_Comment_Time {
-  color: #999;
+  color: var(--theme-elevation-600, #666666);
 }
 
 .CommentPlugin_CommentsPanel_List_Thread {
   padding: 0 0 0 0;
   margin: 0;
-  border-top: 1px solid #eee;
-  border-bottom: 1px solid #eee;
+  border-top: 1px solid var(--theme-elevation-200, #e0e0e0);
+  border-bottom: 1px solid var(--theme-elevation-200, #e0e0e0);
   position: relative;
   transition: all 0.2s linear;
-  border-left: 0 solid #eee;
+  border-left: 0 solid var(--theme-elevation-200, #e0e0e0);
 }
 
 .CommentPlugin_CommentsPanel_List_Thread:first-child,
@@ -370,18 +383,18 @@ i.send {
 }
 
 .CommentPlugin_CommentsPanel_List_Thread.interactive:hover {
-  background-color: #fafafa;
+  background-color: var(--theme-elevation-100, #f3f3f3);
 }
 
 .CommentPlugin_CommentsPanel_List_Thread.active {
-  background-color: #fafafa;
-  border-left: 15px solid #eee;
+  background-color: var(--theme-elevation-100, #f3f3f3);
+  border-left: 15px solid var(--theme-elevation-200, #e0e0e0);
   cursor: inherit;
 }
 
 .CommentPlugin_CommentsPanel_List_Thread_QuoteBox {
   padding-top: 10px;
-  color: #ccc;
+  color: var(--theme-elevation-400, #c5c5c5);
   display: block;
   position: relative;
 }
@@ -391,7 +404,7 @@ i.send {
 }
 
 .CommentPlugin_CommentsPanel_List_Thread_Quote span {
-  color: #222;
+  color: var(--theme-elevation-900, #111111);
   background-color: rgba(255, 212, 0, 0.4);
   padding: 1px;
   line-height: 1.4;
@@ -419,7 +432,7 @@ i.send {
 .CommentPlugin_CommentsPanel_List_Thread_Comments
   .CommentPlugin_CommentsPanel_List_Comment {
   padding-left: 10px;
-  border-left: 5px solid #eee;
+  border-left: 5px solid var(--theme-elevation-200, #e0e0e0);
   margin-left: 5px;
 }
 
@@ -464,7 +477,7 @@ i.send {
   height: 15px;
   width: 15px;
   vertical-align: -10px;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='currentColor' viewBox='0 0 16 16'%3E%3Cpath d='M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5Zm-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5ZM4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06Zm6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528ZM8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5Z'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23999999' viewBox='0 0 16 16'%3E%3Cpath d='M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5Zm-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5ZM4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06Zm6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528ZM8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5Z'/%3E%3C/svg%3E");
   transition: opacity 0.2s linear;
 }
 
