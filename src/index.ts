@@ -18,17 +18,6 @@ export const payloadLexicalCollaboration =
       config.collections = []
     }
 
-    // Add the plugin collection
-    config.collections.push({
-      slug: 'plugin-collection',
-      fields: [
-        {
-          name: 'id',
-          type: 'text',
-        },
-      ],
-    })
-
     // Add the comments collection
     config.collections.push({
       slug: 'comments',
@@ -121,23 +110,7 @@ export const payloadLexicalCollaboration =
         await incomingOnInit(payload)
       }
 
-      const { totalDocs } = await payload.count({
-        collection: 'plugin-collection',
-        where: {
-          id: {
-            equals: 'seeded-by-plugin',
-          },
-        },
-      })
-
-      if (totalDocs === 0) {
-        await payload.create({
-          collection: 'plugin-collection',
-          data: {
-            id: 'seeded-by-plugin',
-          },
-        })
-      }
+      // Plugin initialization complete
     }
 
     return config
