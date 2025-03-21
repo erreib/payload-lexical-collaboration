@@ -83,23 +83,7 @@ export const payloadLexicalCollaboration =
       ]
     })
 
-    if (pluginOptions.collections) {
-      for (const collectionSlug in pluginOptions.collections) {
-        const collection = config.collections.find(
-          (collection) => collection.slug === collectionSlug,
-        )
-
-        if (collection) {
-          collection.fields.push({
-            name: 'addedByPlugin',
-            type: 'text',
-            admin: {
-              position: 'sidebar',
-            },
-          })
-        }
-      }
-    }
+    // Removed code that added "addedByPlugin" field to collections
 
     /**
      * If the plugin is disabled, we still want to keep added collections/fields so the database schema is consistent which is important for migrations.
@@ -112,6 +96,8 @@ export const payloadLexicalCollaboration =
     if (!config.endpoints) {
       config.endpoints = []
     }
+
+    // No custom endpoints needed - using Payload's built-in REST API
 
     if (!config.admin) {
       config.admin = {}

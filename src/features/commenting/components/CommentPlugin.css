@@ -151,16 +151,16 @@ i.add-comment {
 
 .CommentPlugin_ShowCommentsButton {
   position: fixed;
-  top: 10px;
-  right: 10px;
+  top: 50px;
+  right: 20px;
   background-color: #ddd;
   border-radius: 10px;
   border: none;
-  padding: 8px 12px;
+  padding: 8px;
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 5px;
+  justify-content: center;
   z-index: 20;
 }
 

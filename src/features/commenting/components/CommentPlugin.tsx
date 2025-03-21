@@ -75,9 +75,103 @@ export const CommentPlugin: React.FC<CommentPluginProps> = ({
           return
         }
         const { markedComment, index } = deletionInfo
+        
+        // Mark as deleted in the database using Payload's built-in REST API
+        console.log(`Marking comment as deleted: ${comment.id}`);
+        fetch(`/api/comments/${comment.id}`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            resolved: true, // Use resolved field to mark as deleted
+          }),
+        })
+        .then(response => {
+          if (response.ok) {
+            console.log(`Successfully marked comment ${comment.id} as deleted`);
+            return response.json();
+          } else {
+            console.error(`Failed to mark comment ${comment.id} as deleted:`, response.status, response.statusText);
+            return response.text().then(text => {
+              throw new Error(text);
+            });
+          }
+        })
+        .then(data => {
+          console.log('Updated comment data:', data);
+        })
+        .catch(error => {
+          console.error('Error marking comment as deleted:', error);
+        });
+        
         commentStore.addComment(markedComment, thread, index)
       } else {
         commentStore.deleteCommentOrThread(comment)
+        
+        // Mark thread as resolved in the database using Payload's built-in REST API
+        // Update all comments with this threadId
+        console.log(`Marking thread as deleted: ${comment.id}`);
+        const threadUrl = `/api/comments?where[threadId][equals]=${comment.id}`;
+        console.log(`Fetching thread comments from: ${threadUrl}`);
+        
+        fetch(threadUrl, {
+          method: 'GET',
+        })
+          .then(response => {
+            if (response.ok) {
+              return response.json();
+            } else {
+              console.error(`Failed to fetch thread comments:`, response.status, response.statusText);
+              return response.text().then(text => {
+                throw new Error(text);
+              });
+            }
+          })
+          .then(data => {
+            console.log('Thread comments data:', data);
+            // For each comment in the thread, mark it as resolved
+            if (data.docs && Array.isArray(data.docs)) {
+              console.log(`Found ${data.docs.length} comments in thread ${comment.id}`);
+              
+              data.docs.forEach((threadComment: any) => {
+                console.log(`Marking thread comment as deleted: ${threadComment.id}`);
+                
+                fetch(`/api/comments/${threadComment.id}`, {
+                  method: 'PATCH',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                    resolved: true,
+                  }),
+                })
+                .then(response => {
+                  if (response.ok) {
+                    console.log(`Successfully marked thread comment ${threadComment.id} as deleted`);
+                    return response.json();
+                  } else {
+                    console.error(`Failed to mark thread comment ${threadComment.id} as deleted:`, response.status, response.statusText);
+                    return response.text().then(text => {
+                      throw new Error(text);
+                    });
+                  }
+                })
+                .then(data => {
+                  console.log('Updated thread comment data:', data);
+                })
+                .catch(error => {
+                  console.error(`Error marking thread comment ${threadComment.id} as deleted:`, error);
+                });
+              });
+            } else {
+              console.log(`No comments found in thread ${comment.id}`);
+            }
+          })
+          .catch(error => {
+            console.error('Error fetching thread comments:', error);
+          });
+        
         // Remove ids from associated marks
         const id = thread !== undefined ? thread.id : comment.id
         const markNodeKeys = markNodeMap.get(id)
@@ -109,7 +203,8 @@ export const CommentPlugin: React.FC<CommentPluginProps> = ({
       thread?: Thread,
       selection?: any,
     ) => {
-      commentStore.addComment(commentOrThread, thread)
+      // Use saveComment instead of addComment to persist to database
+      commentStore.saveComment(commentOrThread, thread)
       if (isInlineComment) {
         editor.update(() => {
           if ($isRangeSelection(selection)) {
@@ -326,7 +421,6 @@ export const CommentPlugin: React.FC<CommentPluginProps> = ({
           aria-label={showComments ? 'Hide Comments' : 'Show Comments'}
         >
           <i className="comments" />
-          Comments
         </button>,
         document.body,
       )}
