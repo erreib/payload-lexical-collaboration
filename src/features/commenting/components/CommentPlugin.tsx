@@ -3,7 +3,7 @@
 import type { NodeKey } from '@payloadcms/richtext-lexical/lexical'
 import type { Comment, Thread } from '../store.js'
 
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import { mergeRegister, registerNestedElementResolver } from '@payloadcms/richtext-lexical/lexical/utils'
 import {
@@ -52,6 +52,7 @@ export const CommentPlugin: React.FC<CommentPluginProps> = ({
   const [activeIDs, setActiveIDs] = useState<Array<string>>([])
   const [showCommentInput, setShowCommentInput] = useState(false)
   const [showComments, setShowComments] = useState(false)
+  const [isDocumentSaved, setIsDocumentSaved] = useState(false)
 
   const cancelAddComment = useCallback(() => {
     editor.update(() => {
@@ -63,6 +64,38 @@ export const CommentPlugin: React.FC<CommentPluginProps> = ({
     })
     setShowCommentInput(false)
   }, [editor])
+
+  // Check if the document exists in the database
+  const checkIfDocumentExists = useCallback(async () => {
+    try {
+      // Get the document ID from the URL or props
+      const docId = documentId || window.location.pathname.split('/').pop() || 'default';
+      
+      // Get the collection name from the URL path
+      const pathParts = window.location.pathname.split('/');
+      const collectionIndex = pathParts.findIndex(part => part === 'collections');
+      if (collectionIndex === -1) {
+        console.log('Could not determine collection from URL path');
+        return false;
+      }
+      
+      const collection = pathParts[collectionIndex + 1];
+      if (!collection) {
+        console.log('Could not determine collection from URL path');
+        return false;
+      }
+      
+      // Check if document exists by making a GET request
+      const response = await fetch(`/api/${collection}/${docId}`);
+      const exists = response.ok;
+      
+      console.log(`Document ${docId} in collection ${collection} exists: ${exists}`);
+      return exists;
+    } catch (error) {
+      console.error('Error checking if document exists:', error);
+      return false;
+    }
+  }, [documentId]);
 
   // Function to save the document content
   const saveDocument = useCallback(async () => {
@@ -140,6 +173,7 @@ export const CommentPlugin: React.FC<CommentPluginProps> = ({
       
       if (response.ok) {
         console.log('Document saved successfully');
+        setIsDocumentSaved(true);
       } else {
         console.error('Failed to save document:', response.status, response.statusText);
         const errorText = await response.text();
@@ -478,6 +512,13 @@ export const CommentPlugin: React.FC<CommentPluginProps> = ({
     editor.dispatchCommand(TOGGLE_COMMENTS_COMMAND, undefined)
   }, [editor])
 
+  // Check if document exists when component mounts
+  useEffect(() => {
+    checkIfDocumentExists().then(exists => {
+      setIsDocumentSaved(exists);
+    });
+  }, [checkIfDocumentExists]);
+
   // Load comments when documentId changes
   useEffect(() => {
     if (documentId) {
@@ -487,7 +528,7 @@ export const CommentPlugin: React.FC<CommentPluginProps> = ({
 
   return (
     <>
-      {showCommentInput &&
+      {isDocumentSaved && showCommentInput &&
         createPortal(
           <CommentInputBox
             editor={editor}
@@ -497,7 +538,7 @@ export const CommentPlugin: React.FC<CommentPluginProps> = ({
           />,
           document.body,
         )}
-      {activeAnchorKey !== null &&
+      {isDocumentSaved && activeAnchorKey !== null &&
         !showCommentInput &&
         createPortal(
           <AddCommentBox
@@ -507,7 +548,7 @@ export const CommentPlugin: React.FC<CommentPluginProps> = ({
           />,
           document.body,
         )}
-      {createPortal(
+      {isDocumentSaved && createPortal(
         <button
           className={`CommentPlugin_ShowCommentsButton ${
             showComments ? 'active' : ''
@@ -520,7 +561,7 @@ export const CommentPlugin: React.FC<CommentPluginProps> = ({
         </button>,
         document.body,
       )}
-      {showComments &&
+      {isDocumentSaved && showComments &&
         createPortal(
           <CommentsPanel
             comments={comments}
