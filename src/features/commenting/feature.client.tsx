@@ -3,8 +3,6 @@
 import { createClientFeature } from '@payloadcms/richtext-lexical/client'
 import { useAuth } from '@payloadcms/ui'
 import { useLexicalComposerContext } from '@payloadcms/richtext-lexical/lexical/react/LexicalComposerContext'
-import { useEffect } from 'react'
-import { COMMAND_PRIORITY_CRITICAL } from '@payloadcms/richtext-lexical/lexical'
 import { MarkNode } from '@payloadcms/richtext-lexical/lexical/mark'
 
 import { CommentPlugin } from './components/CommentPlugin.js'

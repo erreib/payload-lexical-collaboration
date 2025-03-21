@@ -1,5 +1,3 @@
-import type { LexicalEditor } from '@payloadcms/richtext-lexical/lexical'
-
 export type Comment = {
   author: string
   content: string

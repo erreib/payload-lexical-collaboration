@@ -4,7 +4,6 @@ import type { LexicalEditor, NodeKey } from '@payloadcms/richtext-lexical/lexica
 import type { Comment, Thread } from '../types.js'
 import type { CommentStore } from '../store.js'
 import {
-  $createMarkNode,
   $isMarkNode,
   $unwrapMarkNode,
   $wrapSelectionInMarkNode,
@@ -12,7 +11,6 @@ import {
 } from '@payloadcms/richtext-lexical/lexical/mark'
 import {
   $getNodeByKey,
-  $getSelection,
   $isRangeSelection,
 } from '@payloadcms/richtext-lexical/lexical'
 

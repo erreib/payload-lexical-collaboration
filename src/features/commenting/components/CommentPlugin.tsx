@@ -1,7 +1,6 @@
 'use client'
 
 import type { NodeKey } from '@payloadcms/richtext-lexical/lexical'
-import type { Comment, Thread } from '../types.js'
 
 import React, { useEffect, useMemo, useState } from 'react'
 import { createPortal } from 'react-dom'
