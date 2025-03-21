@@ -1,0 +1,155 @@
+/**
+ * Comment List and Thread Styles
+ */
+
+.CommentPlugin_CommentsPanel_List_Comment {
+  padding: 15px 0 15px 15px;
+  margin: 0;
+  font-size: 14px;
+  position: relative;
+  transition: all 0.2s linear;
+}
+
+.CommentPlugin_CommentsPanel_List_Thread.active
+  .CommentPlugin_CommentsPanel_List_Comment:hover {
+  background-color: inherit;
+}
+
+.CommentPlugin_CommentsPanel_List_Comment p {
+  margin: 0;
+  color: var(--theme-elevation-800, #333333);
+}
+
+.CommentPlugin_CommentsPanel_List_Details {
+  color: var(--theme-elevation-800, #333333);
+  padding-bottom: 5px;
+  vertical-align: top;
+}
+
+.CommentPlugin_CommentsPanel_List_Comment_Author {
+  font-weight: bold;
+  padding-right: 5px;
+}
+
+.CommentPlugin_CommentsPanel_List_Comment_Time {
+  color: var(--theme-elevation-600, #666666);
+}
+
+.CommentPlugin_CommentsPanel_List_Thread {
+  padding: 0 0 0 0;
+  margin: 0;
+  border-top: 1px solid var(--theme-elevation-200, #e0e0e0);
+  border-bottom: 1px solid var(--theme-elevation-200, #e0e0e0);
+  position: relative;
+  transition: all 0.2s linear;
+  border-left: 0 solid var(--theme-elevation-200, #e0e0e0);
+}
+
+.CommentPlugin_CommentsPanel_List_Thread:first-child,
+.CommentPlugin_CommentsPanel_List_Thread
+  + .CommentPlugin_CommentsPanel_List_Thread {
+  border-top: none;
+}
+
+.CommentPlugin_CommentsPanel_List_Thread.interactive {
+  cursor: pointer;
+}
+
+.CommentPlugin_CommentsPanel_List_Thread.interactive:hover {
+  background-color: var(--theme-elevation-100, #f3f3f3);
+}
+
+.CommentPlugin_CommentsPanel_List_Thread.active {
+  background-color: var(--theme-elevation-100, #f3f3f3);
+  border-left: 15px solid var(--theme-elevation-200, #e0e0e0);
+  cursor: inherit;
+}
+
+.CommentPlugin_CommentsPanel_List_Thread_QuoteBox {
+  padding-top: 10px;
+  color: var(--theme-elevation-400, #c5c5c5);
+  display: block;
+  position: relative;
+}
+
+.CommentPlugin_CommentsPanel_List_Thread_Quote {
+  margin: 0px 10px 0 10px;
+}
+
+.CommentPlugin_CommentsPanel_List_Thread_Quote span {
+  color: var(--theme-elevation-900, #111111);
+  background-color: rgba(255, 212, 0, 0.4);
+  padding: 1px;
+  line-height: 1.4;
+  display: inline;
+  font-weight: bold;
+}
+
+.CommentPlugin_CommentsPanel_List_Thread_Comments {
+  padding-left: 10px;
+  list-style-type: none;
+}
+
+.CommentPlugin_CommentsPanel_List_Thread_Comments
+  .CommentPlugin_CommentsPanel_List_Comment:first-child {
+  border: none;
+  margin-left: 0;
+  padding-left: 5px;
+}
+
+.CommentPlugin_CommentsPanel_List_Thread_Comments
+  .CommentPlugin_CommentsPanel_List_Comment:first-child.CommentPlugin_CommentsPanel_List_Comment:last-child {
+  padding-bottom: 5px;
+}
+
+.CommentPlugin_CommentsPanel_List_Thread_Comments
+  .CommentPlugin_CommentsPanel_List_Comment {
+  padding-left: 10px;
+  border-left: 5px solid var(--theme-elevation-200, #e0e0e0);
+  margin-left: 5px;
+}
+
+.CommentPlugin_CommentsPanel_List_Thread_Editor {
+  position: relative;
+  padding-top: 1px;
+}
+
+.CommentPlugin_CommentsPanel_List_DeleteButton {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 30px;
+  height: 30px;
+  background-color: transparent;
+  border: none;
+  opacity: 0;
+  cursor: pointer;
+  padding: 0;
+}
+
+.CommentPlugin_CommentsPanel_DeletedComment,
+.CommentPlugin_CommentsPanel_List_Comment:hover
+  .CommentPlugin_CommentsPanel_List_DeleteButton,
+.CommentPlugin_CommentsPanel_List_Thread_QuoteBox:hover
+  .CommentPlugin_CommentsPanel_List_DeleteButton {
+  opacity: 0.5;
+}
+
+.CommentPlugin_CommentsPanel_List_DeleteButton:hover {
+  background-color: transparent;
+  opacity: 1;
+  filter: invert(45%) sepia(98%) saturate(2299%) hue-rotate(201deg)
+    brightness(100%) contrast(92%);
+}
+
+.CommentPlugin_CommentsPanel_List_DeleteButton i.delete {
+  background-size: contain;
+  position: absolute;
+  left: 5px;
+  top: 5px;
+  height: 15px;
+  width: 15px;
+  vertical-align: -10px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23999999' viewBox='0 0 16 16'%3E%3Cpath d='M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5Zm-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5ZM4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06Zm6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528ZM8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5Z'/%3E%3C/svg%3E");
+  transition: opacity 0.2s linear;
+}

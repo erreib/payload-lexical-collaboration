@@ -1,0 +1,13 @@
+/**
+ * Mark Node Styling
+ */
+
+/* Mark node styling */
+.editor-container [data-lexical-mark] {
+  background-color: rgba(255, 212, 0, 0.3);
+  cursor: pointer;
+}
+
+.editor-container [data-lexical-mark].selected {
+  background-color: rgba(255, 212, 0, 0.7);
+}
