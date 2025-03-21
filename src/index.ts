@@ -24,6 +24,7 @@ export const payloadLexicalCollaboration =
       admin: {
         useAsTitle: 'content',
         defaultColumns: ['content', 'author', 'createdAt'],
+        hidden: true,
       },
       access: {
         read: () => true,

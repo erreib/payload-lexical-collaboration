@@ -1,9 +1,9 @@
 'use client'
 
-import type { LexicalEditor, NodeKey } from '@payloadcms/richtext-lexical/lexical'
-import type { Comment, Comments, Thread } from '../store.js'
+import type { NodeKey } from '@payloadcms/richtext-lexical/lexical'
+import type { Comment, Thread } from '../store.js'
 
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { mergeRegister, registerNestedElementResolver } from '@payloadcms/richtext-lexical/lexical/utils'
 import {

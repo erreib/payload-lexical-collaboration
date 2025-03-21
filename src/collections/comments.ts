@@ -5,6 +5,7 @@ export const Comments: CollectionConfig = {
   admin: {
     useAsTitle: 'content',
     defaultColumns: ['content', 'author', 'createdAt'],
+    hidden: true,
   },
   access: {
     read: () => true,
