@@ -1,8 +1,8 @@
-import { mongooseAdapter } from '@payloadcms/db-mongodb'
+import { sqliteAdapter } from '@payloadcms/db-sqlite'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import path from 'path'
 import { buildConfig } from 'payload'
-import { payloadLexicalCollaboration } from 'payload-lexical-collaboration'
+import { payloadLexicalCollaboration, CommentFeature } from 'payload-lexical-collaboration'
 import sharp from 'sharp'
 import { fileURLToPath } from 'url'
 
@@ -19,15 +19,40 @@ if (!process.env.ROOT_DIR) {
 
 export default buildConfig({
   admin: {
-    autoLogin: devUser,
     importMap: {
       baseDir: path.resolve(dirname),
     },
   },
   collections: [
     {
+      slug: 'users',
+      auth: true,
+      admin: {
+        useAsTitle: 'email',
+      },
+      fields: [
+        {
+          name: 'name',
+          type: 'text',
+        },
+      ],
+    },
+    {
       slug: 'posts',
-      fields: [],
+      admin: {
+        useAsTitle: 'title',
+      },
+      fields: [
+        {
+          name: 'title',
+          type: 'text',
+          required: true,
+        },
+        {
+          name: 'content',
+          type: 'richText',
+        },
+      ],
     },
     {
       slug: 'media',
@@ -37,10 +62,16 @@ export default buildConfig({
       },
     },
   ],
-  db: mongooseAdapter({
-    url: process.env.DATABASE_URI || '',
+  db: sqliteAdapter({
+    client: {
+      url: process.env.DATABASE_URL || 'file:./payload.db',
+    },
   }),
-  editor: lexicalEditor(),
+  editor: lexicalEditor({
+    features: [
+      CommentFeature(),
+    ],
+  }),
   email: testEmailAdapter,
   onInit: async (payload) => {
     await seed(payload)
