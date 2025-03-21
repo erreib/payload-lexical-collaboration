@@ -1,13 +1,13 @@
 'use client'
 
 import type { LexicalEditor, NodeKey, RangeSelection } from '@payloadcms/richtext-lexical/lexical'
-import type { Comment, Thread } from '../types.js'
+import type { Comment, Thread } from '../../types.js'
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { createDOMRange, createRectsFromDOMRange } from '@payloadcms/richtext-lexical/lexical/selection'
 import { $getSelection, $isRangeSelection } from '@payloadcms/richtext-lexical/lexical'
-import { createComment, createThread } from '../utils/factory.js'
+import { createComment, createThread } from '../../utils/factory.js'
 import { useLayoutEffect } from 'react'
 
 type CommentInputBoxProps = {

@@ -1,14 +1,13 @@
 'use client'
 
-import type { Comment, Comments, Thread } from '../types.js'
+import type { Comment, Comments, Thread } from '../../types.js'
 import type { NodeKey } from '@payloadcms/richtext-lexical/lexical'
 
 import React, { useRef } from 'react'
-import { createComment } from '../utils/factory.js'
-import { confirmDeleteComment, confirmDeleteThread } from '../utils/dialog.js'
-import { CommentItem } from './CommentItem.js'
-import { ThreadItem } from './ThreadItem.js'
-import { CommentComposer } from './CommentComposer.js'
+import { createComment } from '../../utils/factory.js'
+import { confirmDeleteComment, confirmDeleteThread } from '../../utils/dialog.js'
+import { CommentItem } from '../display/CommentItem.js'
+import { ThreadItem } from '../display/ThreadItem.js'
 
 type CommentsPanelProps = {
   activeIDs: Array<string>

@@ -1,7 +1,7 @@
 'use client'
 
 import React from 'react'
-import type { Comment } from '../types.js'
+import type { Comment } from '../../types.js'
 import { TimeAgo } from './TimeAgo.js'
 
 type CommentItemProps = {

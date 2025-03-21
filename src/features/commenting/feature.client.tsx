@@ -5,9 +5,9 @@ import { useAuth } from '@payloadcms/ui'
 import { useLexicalComposerContext } from '@payloadcms/richtext-lexical/lexical/react/LexicalComposerContext'
 import { MarkNode } from '@payloadcms/richtext-lexical/lexical/mark'
 
-import { CommentPlugin } from './components/CommentPlugin.js'
+import { CommentPlugin } from './components/core/CommentPlugin.js'
 import { INSERT_COMMENT_COMMAND, TOGGLE_COMMENTS_COMMAND } from './command.js'
-import { CommentIcon } from './components/CommentIcon.js'
+import { CommentIcon } from './components/ui/CommentIcon.js'
 
 export type CommentClientFeatureProps = {
   /**

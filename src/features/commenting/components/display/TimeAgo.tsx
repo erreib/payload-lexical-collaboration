@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import { formatTimeAgo } from '../utils/time.js'
+import { formatTimeAgo } from '../../utils/time.js'
 
 type TimeAgoProps = {
   timestamp: number

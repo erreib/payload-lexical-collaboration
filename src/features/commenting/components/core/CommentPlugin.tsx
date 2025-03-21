@@ -6,16 +6,16 @@ import React, { useEffect, useMemo, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { useLexicalComposerContext } from '@payloadcms/richtext-lexical/lexical/react/LexicalComposerContext'
 
-import { CommentStore, useCommentStore } from '../store.js'
-import { AddCommentBox } from './AddCommentBox.js'
-import { CommentInputBox } from './CommentInputBox.js'
+import { CommentStore, useCommentStore } from '../../store.js'
+import { AddCommentBox } from '../input/AddCommentBox.js'
+import { CommentInputBox } from '../input/CommentInputBox.js'
 import { CommentsPanel } from './CommentPanel.js'
-import { useCommentMarks } from '../hooks/editor/useCommentMarks.js'
-import { useCommentCommands } from '../hooks/editor/useCommentCommands.js'
-import { useDocumentOperations } from '../hooks/useDocumentOperations.js'
-import { useCommentOperations } from '../hooks/useCommentOperations.js'
+import { useCommentMarks } from '../../hooks/editor/useCommentMarks.js'
+import { useCommentCommands } from '../../hooks/editor/useCommentCommands.js'
+import { useDocumentOperations } from '../../hooks/useDocumentOperations.js'
+import { useCommentOperations } from '../../hooks/useCommentOperations.js'
 
-import './CommentPlugin.css'
+import '../ui/CommentPlugin.css'
 
 type CommentPluginProps = {
   documentId?: string
