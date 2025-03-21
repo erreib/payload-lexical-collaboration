@@ -1,10 +1,10 @@
 'use client'
 
-import type { Comment, Comments, Thread } from '../store.js'
+import type { Comment, Comments, Thread } from '../types.js'
 import type { NodeKey } from '@payloadcms/richtext-lexical/lexical'
 
 import React, { useRef, useState, useMemo } from 'react'
-import { createComment } from '../store.js'
+import { createComment } from '../utils/factory.js'
 
 type CommentsPanelProps = {
   activeIDs: Array<string>
