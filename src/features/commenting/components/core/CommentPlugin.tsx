@@ -1,6 +1,7 @@
 'use client'
 
 import type { NodeKey } from '@payloadcms/richtext-lexical/lexical'
+import type { CommentPluginProps } from '../../types.js'
 
 import React, { useEffect, useMemo, useState } from 'react'
 import { createPortal } from 'react-dom'
@@ -16,11 +17,6 @@ import { useDocumentOperations } from '../../hooks/useDocumentOperations.js'
 import { useCommentOperations } from '../../hooks/useCommentOperations.js'
 
 import '../ui/CommentPlugin.css'
-
-type CommentPluginProps = {
-  documentId?: string
-  currentUser: string
-}
 
 export const CommentPlugin: React.FC<CommentPluginProps> = ({
   documentId = 'default',

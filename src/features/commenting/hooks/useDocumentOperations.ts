@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react'
 import type { LexicalEditor } from '@payloadcms/richtext-lexical/lexical'
+import type { DocumentOperationsResult } from '../types.js'
 import { documentService } from '../services/documentService.js'
 
 /**
@@ -13,7 +14,7 @@ import { documentService } from '../services/documentService.js'
 export function useDocumentOperations(
   editor: LexicalEditor,
   documentId: string = 'default'
-) {
+): DocumentOperationsResult {
   const [isDocumentSaved, setIsDocumentSaved] = useState(false)
 
   // Check if the document exists in the database

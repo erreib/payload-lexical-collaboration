@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo } from 'react'
 import type { LexicalEditor, NodeKey } from '@payloadcms/richtext-lexical/lexical'
+import type { MarkNodeMapType } from '../../types.js'
 import { mergeRegister, registerNestedElementResolver } from '@payloadcms/richtext-lexical/lexical/utils'
 import {
   $createMarkNode,
@@ -27,9 +28,9 @@ export function useCommentMarks(
   editor: LexicalEditor,
   setActiveIDs: (ids: string[]) => void,
   setActiveAnchorKey: (key: NodeKey | null) => void
-): Map<string, Set<NodeKey>> {
+): MarkNodeMapType {
   // Create a map to track mark nodes
-  const markNodeMap = useMemo<Map<string, Set<NodeKey>>>(() => {
+  const markNodeMap = useMemo<MarkNodeMapType>(() => {
     return new Map()
   }, [])
 

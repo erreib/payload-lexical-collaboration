@@ -1,7 +1,7 @@
 'use client'
 
-import type { LexicalEditor, NodeKey, RangeSelection } from '@payloadcms/richtext-lexical/lexical'
-import type { Comment, Thread } from '../../types.js'
+import type { RangeSelection } from '@payloadcms/richtext-lexical/lexical'
+import type { CommentInputBoxProps } from '../../types.js'
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
@@ -9,20 +9,6 @@ import { createDOMRange, createRectsFromDOMRange } from '@payloadcms/richtext-le
 import { $getSelection, $isRangeSelection } from '@payloadcms/richtext-lexical/lexical'
 import { createComment, createThread } from '../../utils/factory.js'
 import { useLayoutEffect } from 'react'
-
-type CommentInputBoxProps = {
-  editor: LexicalEditor
-  cancelAddComment: () => void
-  submitAddComment: (
-    commentOrThread: Comment | Thread,
-    isInlineComment: boolean,
-    thread?: Thread,
-    selection?: RangeSelection | null,
-  ) => void
-  author: string
-  setActiveAnchorKey: (key: NodeKey | null) => void
-  setShowCommentInput: (show: boolean) => void
-}
 
 export const CommentInputBox: React.FC<CommentInputBoxProps> = ({
   editor,

@@ -1,5 +1,5 @@
 import type { LexicalEditor } from '@payloadcms/richtext-lexical/lexical'
-import { Comment, Comments, Thread } from './types.js'
+import { Comment, CommentDeletionResult, Comments, Thread } from './types.js'
 import { cloneThread, markDeleted } from './utils/factory.js'
 import { commentService } from './api/commentService.js'
 import { isCommentDuplicateInThread, isThreadDuplicate } from './utils/comments.js'
@@ -91,7 +91,7 @@ export class CommentStore {
   deleteCommentOrThread(
     commentOrThread: Comment | Thread,
     thread?: Thread,
-  ): {markedComment: Comment; index: number} | null {
+  ): CommentDeletionResult | null {
     const nextComments = Array.from(this._comments)
     let commentIndex: number | null = null
 

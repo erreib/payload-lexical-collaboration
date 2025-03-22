@@ -1,29 +1,12 @@
 'use client'
 
-import type { Comment, Comments, Thread } from '../../types.js'
-import type { NodeKey } from '@payloadcms/richtext-lexical/lexical'
+import type { Comment, CommentsPanelProps, Thread } from '../../types.js'
 
 import React, { useRef } from 'react'
 import { createComment } from '../../utils/factory.js'
 import { confirmDeleteComment, confirmDeleteThread } from '../../utils/dialog.js'
 import { CommentItem } from '../display/CommentItem.js'
 import { ThreadItem } from '../display/ThreadItem.js'
-
-type CommentsPanelProps = {
-  activeIDs: Array<string>
-  comments: Comments
-  deleteCommentOrThread: (
-    commentOrThread: Comment | Thread,
-    thread?: Thread,
-  ) => void
-  markNodeMap: Map<string, Set<NodeKey>>
-  submitAddComment: (
-    commentOrThread: Comment | Thread,
-    isInlineComment: boolean,
-    thread?: Thread,
-  ) => void
-  currentUser: string
-}
 
 /**
  * Panel for displaying and managing comments and threads

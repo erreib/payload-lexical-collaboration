@@ -1,7 +1,7 @@
 'use client'
 
-import type { LexicalEditor, NodeKey } from '@payloadcms/richtext-lexical/lexical'
-import type { Comment, Thread } from '../types.js'
+import type { LexicalEditor } from '@payloadcms/richtext-lexical/lexical'
+import type { Comment, CommentDeletionResult, MarkNodeMapType, Thread } from '../types.js'
 import type { CommentStore } from '../store.js'
 import { API_ENDPOINTS } from '../api/commentService.js'
 import {
@@ -32,11 +32,11 @@ export class CommentOperations {
   async deleteCommentOrThread(
     commentStore: CommentStore,
     editor: LexicalEditor,
-    markNodeMap: Map<string, Set<NodeKey>>,
+    markNodeMap: MarkNodeMapType,
     comment: Comment | Thread,
     thread?: Thread,
     saveDocumentCallback?: () => Promise<void | boolean>
-  ): Promise<{markedComment: Comment; index: number} | null> {
+  ): Promise<CommentDeletionResult | null> {
     if (comment.type === 'comment') {
       const deletionInfo = commentStore.deleteCommentOrThread(
         comment,

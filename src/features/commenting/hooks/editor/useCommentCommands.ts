@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect } from 'react'
 import type { LexicalEditor, NodeKey } from '@payloadcms/richtext-lexical/lexical'
+import type { CommentCommandsResult } from '../../types.js'
 import {
   $getSelection,
   COMMAND_PRIORITY_CRITICAL,
@@ -27,7 +28,7 @@ export function useCommentCommands(
   showComments: boolean,
   showCommentInput: boolean,
   setActiveAnchorKey: (key: NodeKey | null) => void
-) {
+): CommentCommandsResult {
   // Cancel adding a comment
   const cancelAddComment = useCallback(() => {
     editor.update(() => {

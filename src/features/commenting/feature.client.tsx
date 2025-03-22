@@ -9,14 +9,7 @@ import { CommentPlugin } from './components/core/CommentPlugin.js'
 import { INSERT_COMMENT_COMMAND, TOGGLE_COMMENTS_COMMAND } from './command.js'
 import { CommentIcon } from './components/ui/CommentIcon.js'
 import { getDocumentIdFromUrl } from './utils/url.js'
-
-export type CommentClientFeatureProps = {
-  /**
-   * Whether to enable the commenting feature
-   * @default true
-   */
-  enabled?: boolean
-}
+import { CommentClientFeatureProps } from './types.js'
 
 export const CommentClientFeature = createClientFeature<CommentClientFeatureProps>(
   ({ props }) => {

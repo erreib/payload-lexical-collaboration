@@ -1,8 +1,8 @@
 'use client'
 
 import { useCallback } from 'react'
-import type { LexicalEditor, NodeKey } from '@payloadcms/richtext-lexical/lexical'
-import type { Comment, Thread } from '../types.js'
+import type { LexicalEditor } from '@payloadcms/richtext-lexical/lexical'
+import type { Comment, CommentOperationsResult, MarkNodeMapType, Thread } from '../types.js'
 import type { CommentStore } from '../store.js'
 import { commentOperations } from '../services/commentOperations.js'
 
@@ -17,9 +17,9 @@ import { commentOperations } from '../services/commentOperations.js'
 export function useCommentOperations(
   commentStore: CommentStore,
   editor: LexicalEditor,
-  markNodeMap: Map<string, Set<NodeKey>>,
+  markNodeMap: MarkNodeMapType,
   saveDocument: () => Promise<void | boolean>
-) {
+): CommentOperationsResult {
   // Delete a comment or thread
   const deleteCommentOrThread = useCallback(
     (comment: Comment | Thread, thread?: Thread) => {
