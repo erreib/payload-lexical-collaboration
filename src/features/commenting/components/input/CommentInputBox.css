@@ -7,7 +7,7 @@
   position: absolute;
   width: 250px;
   min-height: 80px;
-  background-color: #fff;
+  background-color: var(--theme-input-bg);
   box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.1);
   border-radius: 5px;
   z-index: 24;
@@ -25,7 +25,7 @@
   left: calc(50% + 0.25em);
   box-sizing: border-box;
   border: 0.5em solid black;
-  border-color: transparent transparent #fff #fff;
+  border-color: transparent transparent var(--theme-input-bg);
   transform-origin: 0 0;
   transform: rotate(135deg);
   box-shadow: -3px 3px 3px 0 rgba(0, 0, 0, 0.05);
