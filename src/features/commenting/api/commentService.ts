@@ -1,6 +1,14 @@
 import { Comment, Thread, Comments } from '../types.js'
 import { createComment, createThread } from '../utils/factory.js'
 import { generatedIds } from '../utils/id.js'
+import { getDocumentIdFromUrl } from '../utils/url.js'
+import { isCommentDuplicateInThread } from '../utils/comments.js'
+
+// API endpoints
+export const API_ENDPOINTS = {
+  COMMENTS: '/api/lexical-collaboration-plugin-comments',
+  USERS: '/api/users'
+}
 
 /**
  * Service for handling comment-related API operations
@@ -13,7 +21,7 @@ export class CommentService {
    */
   async findUserByEmail(email: string): Promise<string | null> {
     try {
-      const userUrl = `/api/users?where[email][equals]=${encodeURIComponent(email)}`;
+      const userUrl = `${API_ENDPOINTS.USERS}?where[email][equals]=${encodeURIComponent(email)}`;
       
       const userResponse = await fetch(userUrl);
       const userData = await userResponse.json();
@@ -48,7 +56,7 @@ export class CommentService {
       generatedIds.clear();
       
       // Fetch comments from Payload API
-      const url = `/api/lexical-collaboration-plugin-comments?where[documentId][equals]=${encodeURIComponent(documentId)}&where[resolved][equals]=false&depth=2`;
+      const url = `${API_ENDPOINTS.COMMENTS}?where[documentId][equals]=${encodeURIComponent(documentId)}&where[resolved][equals]=false&depth=2`;
       const response = await fetch(url);
       
       if (!response.ok) {
@@ -91,9 +99,9 @@ export class CommentService {
         
         // Check if this comment is already in the thread
         const existingComments = threadMap.get(comment.threadId)!;
-        const isDuplicate = existingComments.some(c => c.id === commentObj.id);
+        const threadObj = { type: 'thread', id: comment.threadId, quote: '', comments: existingComments } as Thread;
         
-        if (!isDuplicate) {
+        if (!isCommentDuplicateInThread(threadObj, commentObj)) {
           existingComments.push(commentObj);
         }
       });
@@ -146,7 +154,7 @@ export class CommentService {
       }
       
       // Get the document ID from the URL if not provided
-      const docId = documentId || window.location.pathname.split('/').pop() || 'default';
+      const docId = documentId || getDocumentIdFromUrl();
       
       // Save to Payload API
       if (commentOrThread.type === 'thread') {
@@ -197,7 +205,7 @@ export class CommentService {
     };
     
     try {
-      const saveResponse = await fetch('/api/lexical-collaboration-plugin-comments', {
+      const saveResponse = await fetch(API_ENDPOINTS.COMMENTS, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

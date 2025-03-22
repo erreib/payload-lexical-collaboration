@@ -2,6 +2,8 @@ import type { LexicalEditor } from '@payloadcms/richtext-lexical/lexical'
 import { Comment, Comments, Thread } from './types.js'
 import { cloneThread, markDeleted } from './utils/factory.js'
 import { commentService } from './api/commentService.js'
+import { isCommentDuplicateInThread, isThreadDuplicate } from './utils/comments.js'
+import { getDocumentIdFromUrl } from './utils/url.js'
 
 /**
  * Helper function to trigger onChange listeners
@@ -52,16 +54,13 @@ export class CommentStore {
           const newThread = cloneThread(comment)
           
           // Check if this comment already exists in the thread
-          const isDuplicate = newThread.comments.some(c => c.id === commentOrThread.id);
+          const isDuplicate = isCommentDuplicateInThread(newThread, commentOrThread as Comment);
           
           if (!isDuplicate) {
             nextComments.splice(i, 1, newThread)
             const insertOffset =
               offset !== undefined ? offset : newThread.comments.length
             newThread.comments.splice(insertOffset, 0, commentOrThread)
-            console.log(`Added comment ${commentOrThread.id} to thread ${thread.id}`);
-          } else {
-            console.log(`Comment ${commentOrThread.id} already exists in thread ${thread.id}, skipping`);
           }
           break
         }
@@ -70,22 +69,16 @@ export class CommentStore {
       // Adding a new thread or standalone comment
       if (commentOrThread.type === 'thread') {
         // Check if this thread already exists
-        const isDuplicate = nextComments.some(c => 
-          c.type === 'thread' && c.id === commentOrThread.id
-        );
+        const isDuplicate = isThreadDuplicate(nextComments, commentOrThread as Thread);
         
         if (!isDuplicate) {
           const insertOffset = offset !== undefined ? offset : nextComments.length
           nextComments.splice(insertOffset, 0, commentOrThread)
-          console.log(`Added new thread ${commentOrThread.id}`);
-        } else {
-          console.log(`Thread ${commentOrThread.id} already exists, skipping`);
         }
       } else {
         // Adding a standalone comment (not in a thread)
         const insertOffset = offset !== undefined ? offset : nextComments.length
         nextComments.splice(insertOffset, 0, commentOrThread)
-        console.log(`Added standalone comment ${commentOrThread.id}`);
       }
     }
     this._comments = nextComments
@@ -175,7 +168,7 @@ export class CommentStore {
       this.addComment(commentOrThread, thread);
       
       // Get the document ID from the URL
-      const documentId = window.location.pathname.split('/').pop() || 'default';
+      const documentId = getDocumentIdFromUrl();
       
       // Save to the API service
       await commentService.saveComment(commentOrThread, thread, documentId);

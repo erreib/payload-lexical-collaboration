@@ -1,6 +1,7 @@
 'use client'
 
 import type { LexicalEditor } from '@payloadcms/richtext-lexical/lexical'
+import { getCollectionFromUrl, getDocumentApiEndpoint, getDocumentIdFromUrl } from '../utils/url.js'
 
 /**
  * Service for handling document-related operations
@@ -14,28 +15,17 @@ export class DocumentService {
   async checkIfDocumentExists(documentId: string): Promise<boolean> {
     try {
       // Get the document ID from the URL or props
-      const docId = documentId || window.location.pathname.split('/').pop() || 'default';
+      const docId = documentId || getDocumentIdFromUrl();
       
       // Get the collection name from the URL path
-      const pathParts = window.location.pathname.split('/');
-      const collectionIndex = pathParts.findIndex(part => part === 'collections');
-      if (collectionIndex === -1) {
-        console.log('Could not determine collection from URL path');
-        return false;
-      }
-      
-      const collection = pathParts[collectionIndex + 1];
+      const collection = getCollectionFromUrl();
       if (!collection) {
-        console.log('Could not determine collection from URL path');
         return false;
       }
       
       // Check if document exists by making a GET request
-      const response = await fetch(`/api/${collection}/${docId}`);
-      const exists = response.ok;
-      
-      console.log(`Document ${docId} in collection ${collection} exists: ${exists}`);
-      return exists;
+      const response = await fetch(getDocumentApiEndpoint(collection, docId));
+      return response.ok;
     } catch (error) {
       console.error('Error checking if document exists:', error);
       return false;
@@ -52,7 +42,7 @@ export class DocumentService {
     let fieldName = 'content'; // Default field name
     
     try {
-      const docResponse = await fetch(`/api/${collection}/${docId}`);
+      const docResponse = await fetch(getDocumentApiEndpoint(collection, docId));
       if (docResponse.ok) {
         const docData = await docResponse.json();
         
@@ -70,14 +60,10 @@ export class DocumentService {
         if (possibleFieldNames.length > 0) {
           // Use the first field that looks like a rich text field
           fieldName = possibleFieldNames[0];
-          console.log(`Detected rich text field name: ${fieldName}`);
-        } else {
-          console.log(`Could not detect rich text field, using default: ${fieldName}`);
         }
       }
     } catch (error) {
-      console.warn('Error fetching document to determine field name:', error);
-      console.log(`Using default field name: ${fieldName}`);
+      console.error('Error fetching document to determine field name:', error);
     }
     
     return fieldName;
@@ -92,23 +78,13 @@ export class DocumentService {
   async saveDocument(editor: LexicalEditor, documentId: string): Promise<boolean> {
     try {
       // Get the document ID from the URL or props
-      const docId = documentId || window.location.pathname.split('/').pop() || 'default';
+      const docId = documentId || getDocumentIdFromUrl();
       
       // Get the collection name from the URL path
-      const pathParts = window.location.pathname.split('/');
-      const collectionIndex = pathParts.findIndex(part => part === 'collections');
-      if (collectionIndex === -1) {
-        console.error('Could not determine collection from URL path');
-        return false;
-      }
-      
-      const collection = pathParts[collectionIndex + 1];
+      const collection = getCollectionFromUrl();
       if (!collection) {
-        console.error('Could not determine collection from URL path');
         return false;
       }
-      
-      console.log(`Saving document: ${docId} in collection: ${collection}`);
       
       // Detect the field name
       const fieldName = await this.detectRichTextField(collection, docId);
@@ -122,10 +98,8 @@ export class DocumentService {
         [fieldName]: editorStateJSON
       };
       
-      console.log(`Updating document with field: ${fieldName}`);
-      
       // Make an API call to update the document
-      const response = await fetch(`/api/${collection}/${docId}`, {
+      const response = await fetch(getDocumentApiEndpoint(collection, docId), {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -133,15 +107,12 @@ export class DocumentService {
         body: JSON.stringify(updatePayload),
       });
       
-      if (response.ok) {
-        console.log('Document saved successfully');
-        return true;
-      } else {
+      if (!response.ok) {
         console.error('Failed to save document:', response.status, response.statusText);
-        const errorText = await response.text();
-        console.error('Error details:', errorText);
         return false;
       }
+      
+      return true;
     } catch (error) {
       console.error('Error saving document:', error);
       return false;

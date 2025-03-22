@@ -8,6 +8,7 @@ import { MarkNode } from '@payloadcms/richtext-lexical/lexical/mark'
 import { CommentPlugin } from './components/core/CommentPlugin.js'
 import { INSERT_COMMENT_COMMAND, TOGGLE_COMMENTS_COMMAND } from './command.js'
 import { CommentIcon } from './components/ui/CommentIcon.js'
+import { getDocumentIdFromUrl } from './utils/url.js'
 
 export type CommentClientFeatureProps = {
   /**
@@ -42,9 +43,8 @@ export const CommentClientFeature = createClientFeature<CommentClientFeatureProp
             const { user } = useAuth()
             
             // Get the document ID from the URL
-            // This is a simple implementation - you might need to adjust based on your app's routing
             const documentId = typeof window !== 'undefined' 
-              ? window.location.pathname.split('/').pop() 
+              ? getDocumentIdFromUrl()
               : undefined
             
             // Get the current user's name or email

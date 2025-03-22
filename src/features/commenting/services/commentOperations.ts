@@ -3,6 +3,7 @@
 import type { LexicalEditor, NodeKey } from '@payloadcms/richtext-lexical/lexical'
 import type { Comment, Thread } from '../types.js'
 import type { CommentStore } from '../store.js'
+import { API_ENDPOINTS } from '../api/commentService.js'
 import {
   $isMarkNode,
   $unwrapMarkNode,
@@ -47,9 +48,8 @@ export class CommentOperations {
       const { markedComment, index } = deletionInfo
       
       // Mark as deleted in the database using Payload's built-in REST API
-      console.log(`Marking comment as deleted: ${comment.id}`);
       try {
-        const response = await fetch(`/api/lexical-collaboration-plugin-comments/${comment.id}`, {
+        const response = await fetch(`${API_ENDPOINTS.COMMENTS}/${comment.id}`, {
           method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',
@@ -59,14 +59,8 @@ export class CommentOperations {
           }),
         });
         
-        if (response.ok) {
-          console.log(`Successfully marked comment ${comment.id} as deleted`);
-          const data = await response.json();
-          console.log('Updated comment data:', data);
-        } else {
+        if (!response.ok) {
           console.error(`Failed to mark comment ${comment.id} as deleted:`, response.status, response.statusText);
-          const errorText = await response.text();
-          console.error('Error details:', errorText);
         }
       } catch (error) {
         console.error('Error marking comment as deleted:', error);
@@ -79,28 +73,20 @@ export class CommentOperations {
       
       // Mark thread as resolved in the database using Payload's built-in REST API
       // Update all comments with this threadId
-      console.log(`Marking thread as deleted: ${comment.id}`);
       try {
-        const threadUrl = `/api/lexical-collaboration-plugin-comments?where[threadId][equals]=${comment.id}`;
-        console.log(`Fetching thread comments from: ${threadUrl}`);
-        
+        const threadUrl = `${API_ENDPOINTS.COMMENTS}?where[threadId][equals]=${comment.id}`;
         const response = await fetch(threadUrl, {
           method: 'GET',
         });
         
         if (response.ok) {
           const data = await response.json();
-          console.log('Thread comments data:', data);
           
           // For each comment in the thread, mark it as resolved
           if (data.docs && Array.isArray(data.docs)) {
-            console.log(`Found ${data.docs.length} comments in thread ${comment.id}`);
-            
             const updatePromises = data.docs.map(async (threadComment: any) => {
-              console.log(`Marking thread comment as deleted: ${threadComment.id}`);
-              
               try {
-                const updateResponse = await fetch(`/api/lexical-collaboration-plugin-comments/${threadComment.id}`, {
+                const updateResponse = await fetch(`${API_ENDPOINTS.COMMENTS}/${threadComment.id}`, {
                   method: 'PATCH',
                   headers: {
                     'Content-Type': 'application/json',
@@ -110,15 +96,9 @@ export class CommentOperations {
                   }),
                 });
                 
-                if (updateResponse.ok) {
-                  console.log(`Successfully marked thread comment ${threadComment.id} as deleted`);
-                  const updateData = await updateResponse.json();
-                  console.log('Updated thread comment data:', updateData);
-                } else {
+                if (!updateResponse.ok) {
                   console.error(`Failed to mark thread comment ${threadComment.id} as deleted:`, 
                     updateResponse.status, updateResponse.statusText);
-                  const errorText = await updateResponse.text();
-                  console.error('Error details:', errorText);
                 }
               } catch (error) {
                 console.error(`Error marking thread comment ${threadComment.id} as deleted:`, error);
@@ -127,13 +107,9 @@ export class CommentOperations {
             
             // Wait for all updates to complete
             await Promise.all(updatePromises);
-          } else {
-            console.log(`No comments found in thread ${comment.id}`);
           }
         } else {
           console.error(`Failed to fetch thread comments:`, response.status, response.statusText);
-          const errorText = await response.text();
-          console.error('Error details:', errorText);
         }
       } catch (error) {
         console.error('Error fetching thread comments:', error);

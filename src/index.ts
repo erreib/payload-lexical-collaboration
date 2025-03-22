@@ -73,7 +73,6 @@ export const payloadLexicalCollaboration =
       ]
     })
 
-    // Removed code that added "addedByPlugin" field to collections
 
     /**
      * If the plugin is disabled, we still want to keep added collections/fields so the database schema is consistent which is important for migrations.
@@ -87,7 +86,7 @@ export const payloadLexicalCollaboration =
       config.endpoints = []
     }
 
-    // No custom endpoints needed - using Payload's built-in REST API
+    // Using Payload's built-in REST API for endpoints
 
     if (!config.admin) {
       config.admin = {}
@@ -101,7 +100,6 @@ export const payloadLexicalCollaboration =
       config.admin.components.beforeDashboard = []
     }
 
-    // Dashboard components and custom endpoints removed
 
     const incomingOnInit = config.onInit
 
