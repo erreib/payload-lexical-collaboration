@@ -67,7 +67,8 @@ export default buildConfig({
     },
   }),
   editor: lexicalEditor({
-    features: [
+    features: ({ defaultFeatures }) => [
+      ...defaultFeatures,
       CommentFeature(),
     ],
   }),
