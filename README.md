@@ -174,10 +174,33 @@ pnpm install
 
 # Build the plugin
 pnpm build
-
-# Run development server
-pnpm dev
 ```
+
+### Testing with the Dev Environment
+
+This plugin includes a development environment with a pre-configured Payload CMS instance for testing:
+
+1. Create a `.env` file in the `dev` directory (you can copy from `.env.example`):
+   ```
+   DATABASE_URL=file:./payload.db
+   PAYLOAD_SECRET=YOUR_SECRET_HERE
+   ```
+
+2. Start the development server:
+   ```bash
+   pnpm dev
+   ```
+
+3. The server will start at http://localhost:3000/admin with the following credentials:
+   - Email: dev@payloadcms.com
+   - Password: test
+
+4. The dev environment includes:
+   - A pre-configured `posts` collection with the commenting feature enabled
+   - SQLite database for persistence
+   - Next.js for the admin panel
+
+This development environment is ideal for testing changes to the plugin or exploring its functionality before integrating it into your own project.
 
 ## License
 
