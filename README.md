@@ -43,13 +43,39 @@ export default buildConfig({
 });
 ```
 
-### Add to your Lexical field configuration
+### Add the CommentFeature to Lexical
+
+You can add the CommentFeature in two ways:
+
+#### Option 1: Globally for all richText fields
+
+```typescript
+import { buildConfig } from 'payload/config';
+import { lexicalEditor } from '@payloadcms/richtext-lexical';
+import { CommentFeature } from 'payload-lexical-collaboration';
+
+export default buildConfig({
+  // ... other config
+  editor: lexicalEditor({
+    features: [
+      // ... other global features
+      CommentFeature({
+        // Optional configuration options
+        // enabled: true,
+      }),
+    ],
+  }),
+  // ... rest of config
+});
+```
+
+#### Option 2: Per field configuration
 
 ```typescript
 import { CommentFeature } from 'payload-lexical-collaboration';
 
 const Page = {
-  slug: 'pages',
+  slug: 'posts',
   fields: [
     {
       name: 'content',
