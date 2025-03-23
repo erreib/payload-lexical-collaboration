@@ -6,7 +6,6 @@ import { payloadLexicalCollaboration, CommentFeature } from 'payload-lexical-col
 import sharp from 'sharp'
 import { fileURLToPath } from 'url'
 
-import { devUser } from './helpers/credentials.js'
 import { testEmailAdapter } from './helpers/testEmailAdapter.js'
 import { seed } from './seed.js'
 

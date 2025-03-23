@@ -1,14 +1,17 @@
 # Payload Lexical Collaboration Plugin
 
-A Payload CMS plugin that adds collaborative commenting functionality to the Lexical rich text editor.
+A Payload CMS plugin that adds collaborative commenting functionality to the Lexical rich text editor, enabling content teams to discuss and collaborate on content directly within the editor.
 
 ## Features
 
-- Add inline comments to text content
-- Create comment threads for discussion
-- Mark comments as resolved
-- User attribution for comments
-- Real-time updates (when used with Payload's built-in REST API)
+- **Inline Comments**: Add comments to specific text selections within the editor
+- **Comment Threads**: Create and manage threaded discussions on content
+- **Comment Resolution**: Mark comments as resolved to track progress
+- **User Attribution**: Comments are linked to Payload users for accountability
+- **Real-time Updates**: Comments update in real-time when using Payload's REST API
+- **Visual Highlighting**: Commented text is visually highlighted in the editor
+- **Comment Panel**: Dedicated panel for viewing and managing all comments
+- **Seamless Integration**: Works with Payload's existing user system and permissions
 
 ## Installation
 
@@ -34,6 +37,7 @@ export default buildConfig({
     payloadLexicalCollaboration({
       // Optional configuration options
       // disabled: false,
+      // collections: { users: true } // Specify collections to add custom fields to
     }),
   ],
 });
@@ -64,14 +68,90 @@ const Page = {
 
 ## How It Works
 
-The plugin adds a commenting feature to the Lexical editor in Payload CMS. It creates a new collection called `lexical-collaboration-plugin-comments` to store comments and their associated metadata.
+The plugin consists of several key components:
 
-Comments can be added to specific text selections within the editor. Users can create comment threads, reply to existing comments, and mark comments as resolved.
+1. **Payload Plugin**: Creates a new collection called `lexical-collaboration-plugin-comments` to store comments and their associated metadata.
+
+2. **Lexical Feature**: Adds UI components and functionality to the Lexical editor for creating, viewing, and managing comments.
+
+3. **Comment Store**: Manages the state of comments and provides methods for adding, deleting, and updating comments.
+
+4. **Mark Nodes**: Uses Lexical's mark nodes to highlight commented text in the editor.
+
+5. **API Integration**: Communicates with Payload's REST API to persist comments and sync them across users.
+
+### Comment Structure
+
+Comments are stored with the following structure:
+
+- **documentId**: The ID of the document being commented on
+- **threadId**: The ID of the thread the comment belongs to
+- **content**: The text content of the comment
+- **author**: Relationship to the Payload user who created the comment
+- **quote**: The text that was selected when creating the comment
+- **range**: JSON data representing the selection range
+- **resolved**: Boolean indicating if the comment has been resolved
+- **parentComment**: Optional relationship to a parent comment (for threaded replies)
+
+## Configuration Options
+
+### Plugin Options
+
+The `payloadLexicalCollaboration` function accepts the following options:
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `disabled` | `boolean` | `false` | Disable the plugin entirely |
+| `collections` | `Partial<Record<CollectionSlug, true>>` | `{}` | Specify collections to add custom fields to |
+
+### Feature Options
+
+The `CommentFeature` function accepts the following options:
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `enabled` | `boolean` | `true` | Enable or disable the commenting feature for a specific field |
 
 ## Requirements
 
 - Payload CMS v3.17.1 or higher
 - @payloadcms/richtext-lexical v3.17.1 or higher
+- Node.js ^18.20.2 || >=20.9.0
+
+## Development
+
+### Project Structure
+
+```
+src/
+├── index.ts                  # Main plugin entry point
+├── exports/                  # Export files for client and RSC
+└── features/
+    └── commenting/           # Commenting feature implementation
+        ├── api/              # API services
+        ├── components/       # React components
+        ├── hooks/            # React hooks
+        ├── services/         # Service classes
+        ├── types/            # TypeScript types
+        ├── utils/            # Utility functions
+        ├── command.ts        # Lexical commands
+        ├── feature.client.tsx # Client-side feature implementation
+        ├── feature.server.ts # Server-side feature implementation
+        └── store.ts          # Comment state management
+```
+
+### Building
+
+```bash
+# Install dependencies
+pnpm install
+
+# Build the plugin
+pnpm build
+
+# Run development server
+pnpm dev
+```
 
 ## License
 
