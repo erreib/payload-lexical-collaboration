@@ -2,7 +2,6 @@
 
 import { createClientFeature } from '@payloadcms/richtext-lexical/client'
 import { useAuth } from '@payloadcms/ui'
-import { useLexicalComposerContext } from '@payloadcms/richtext-lexical/lexical/react/LexicalComposerContext'
 import { MarkNode } from '@payloadcms/richtext-lexical/lexical/mark'
 
 import { CommentPlugin } from './components/core/CommentPlugin.js'
@@ -32,7 +31,6 @@ export const CommentClientFeature = createClientFeature<CommentClientFeatureProp
       plugins: [
         {
           Component: () => {
-            const [editor] = useLexicalComposerContext()
             const { user } = useAuth()
             
             // Get the document ID from the URL

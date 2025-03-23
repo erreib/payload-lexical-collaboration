@@ -1,7 +1,7 @@
 'use client'
 
 import type { Comment, Thread, Comments } from '../types/core.js'
-import type { CommentAPIEntity, PayloadAPIResponse, SaveCommentRequest, UserAPIEntity } from '../types/api.js'
+import type { CommentAPIEntity, SaveCommentRequest, UserAPIEntity } from '../types/api.js'
 import type { ICommentService } from '../types/services.js'
 import { API_ENDPOINTS } from '../types/api.js'
 import { createComment, createThread } from '../utils/factory.js'

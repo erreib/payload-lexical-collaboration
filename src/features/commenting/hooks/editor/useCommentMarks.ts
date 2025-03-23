@@ -3,7 +3,6 @@
 import { useEffect, useMemo } from 'react'
 import type { LexicalEditor, NodeKey } from '@payloadcms/richtext-lexical/lexical'
 import type { MarkNodeMapType } from '../../types/core.js'
-import type { CommentMarksResult } from '../../types/hooks.js'
 import { mergeRegister, registerNestedElementResolver } from '@payloadcms/richtext-lexical/lexical/utils'
 import {
   $createMarkNode,
