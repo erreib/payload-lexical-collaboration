@@ -1,7 +1,7 @@
 'use client'
 
 import React from 'react'
-import type { Thread } from '../../types.js'
+import type { Thread } from '../../types/core.js'
 import { CommentItem } from './CommentItem.js'
 import { CommentComposer } from '../input/CommentComposer.js'
 

@@ -1,7 +1,7 @@
 'use client'
 
 import type { NodeKey } from '@payloadcms/richtext-lexical/lexical'
-import type { CommentPluginProps } from '../../types.js'
+import type { CommentPluginProps } from '../../types/props.js'
 
 import React, { useEffect, useMemo, useState } from 'react'
 import { createPortal } from 'react-dom'
@@ -18,6 +18,12 @@ import { useCommentOperations } from '../../hooks/useCommentOperations.js'
 
 import '../ui/CommentPlugin.css'
 
+/**
+ * CommentPlugin component for the Lexical editor
+ * 
+ * This component provides commenting functionality for the Lexical editor,
+ * including adding, viewing, and deleting comments.
+ */
 export const CommentPlugin: React.FC<CommentPluginProps> = ({
   documentId = 'default',
   currentUser,

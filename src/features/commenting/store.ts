@@ -1,9 +1,13 @@
+'use client'
+
 import type { LexicalEditor } from '@payloadcms/richtext-lexical/lexical'
-import { Comment, CommentDeletionResult, Comments, Thread } from './types.js'
+import type { Comment, CommentDeletionResult, Comments, Thread } from './types/core.js'
+import type { CommentStoreInterface } from './types/store.js'
 import { cloneThread, markDeleted } from './utils/factory.js'
 import { commentService } from './api/commentService.js'
 import { isCommentDuplicateInThread, isThreadDuplicate } from './utils/comments.js'
 import { getDocumentIdFromUrl } from './utils/url.js'
+import { withErrorHandling } from './utils/errorHandling.js'
 
 /**
  * Helper function to trigger onChange listeners
@@ -18,7 +22,7 @@ function triggerOnChange(commentStore: CommentStore): void {
 /**
  * Store for managing comments and threads
  */
-export class CommentStore {
+export class CommentStore implements CommentStoreInterface {
   _editor: LexicalEditor
   _comments: Comments
   _changeListeners: Set<() => void>
@@ -54,7 +58,7 @@ export class CommentStore {
           const newThread = cloneThread(comment)
           
           // Check if this comment already exists in the thread
-          const isDuplicate = isCommentDuplicateInThread(newThread, commentOrThread as Comment);
+          const isDuplicate = isCommentDuplicateInThread(newThread, commentOrThread as Comment)
           
           if (!isDuplicate) {
             nextComments.splice(i, 1, newThread)
@@ -69,7 +73,7 @@ export class CommentStore {
       // Adding a new thread or standalone comment
       if (commentOrThread.type === 'thread') {
         // Check if this thread already exists
-        const isDuplicate = isThreadDuplicate(nextComments, commentOrThread as Thread);
+        const isDuplicate = isThreadDuplicate(nextComments, commentOrThread as Thread)
         
         if (!isDuplicate) {
           const insertOffset = offset !== undefined ? offset : nextComments.length
@@ -139,21 +143,23 @@ export class CommentStore {
    * Load comments for a document from the Payload API
    */
   async loadComments(documentId: string): Promise<void> {
-    try {
-      // Clear existing comments
-      this._comments = [];
-      
-      // Load comments from the API service
-      const comments = await commentService.loadComments(documentId);
-      
-      // Update the store with the loaded comments
-      this._comments = comments;
-      
-      // Notify listeners
-      triggerOnChange(this);
-    } catch (error) {
-      console.error('Error loading comments:', error);
-    }
+    return withErrorHandling(
+      async () => {
+        // Clear existing comments
+        this._comments = []
+        
+        // Load comments from the API service
+        const comments = await commentService.loadComments(documentId)
+        
+        // Update the store with the loaded comments
+        this._comments = comments
+        
+        // Notify listeners
+        triggerOnChange(this)
+      },
+      'Error loading comments',
+      undefined
+    )
   }
 
   /**
@@ -163,18 +169,20 @@ export class CommentStore {
     commentOrThread: Comment | Thread,
     thread?: Thread,
   ): Promise<void> {
-    try {
-      // Add to local store first for immediate feedback
-      this.addComment(commentOrThread, thread);
-      
-      // Get the document ID from the URL
-      const documentId = getDocumentIdFromUrl();
-      
-      // Save to the API service
-      await commentService.saveComment(commentOrThread, thread, documentId);
-    } catch (error) {
-      console.error('Error saving comment:', error);
-    }
+    return withErrorHandling(
+      async () => {
+        // Add to local store first for immediate feedback
+        this.addComment(commentOrThread, thread)
+        
+        // Get the document ID from the URL
+        const documentId = getDocumentIdFromUrl()
+        
+        // Save to the API service
+        await commentService.saveComment(commentOrThread, thread, documentId)
+      },
+      'Error saving comment',
+      undefined
+    )
   }
 }
 

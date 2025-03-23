@@ -1,7 +1,7 @@
 'use client'
 
 import type { RangeSelection } from '@payloadcms/richtext-lexical/lexical'
-import type { CommentInputBoxProps } from '../../types.js'
+import type { CommentInputBoxProps } from '../../types/props.js'
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'

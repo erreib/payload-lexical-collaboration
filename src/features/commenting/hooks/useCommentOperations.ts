@@ -2,7 +2,8 @@
 
 import { useCallback } from 'react'
 import type { LexicalEditor } from '@payloadcms/richtext-lexical/lexical'
-import type { Comment, CommentOperationsResult, MarkNodeMapType, Thread } from '../types.js'
+import type { Comment, MarkNodeMapType, Thread } from '../types/core.js'
+import type { CommentOperationsResult } from '../types/hooks.js'
 import type { CommentStore } from '../store.js'
 import { commentOperations } from '../services/commentOperations.js'
 
@@ -30,10 +31,10 @@ export function useCommentOperations(
         comment,
         thread,
         saveDocument
-      );
+      )
     },
     [commentStore, editor, markNodeMap, saveDocument]
-  );
+  )
 
   // Submit a new comment
   const submitAddComment = useCallback(
@@ -51,10 +52,10 @@ export function useCommentOperations(
         thread,
         selection,
         saveDocument
-      );
+      )
     },
     [commentStore, editor, saveDocument]
-  );
+  )
 
   return {
     deleteCommentOrThread,

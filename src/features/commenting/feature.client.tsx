@@ -9,7 +9,7 @@ import { CommentPlugin } from './components/core/CommentPlugin.js'
 import { INSERT_COMMENT_COMMAND, TOGGLE_COMMENTS_COMMAND } from './command.js'
 import { CommentIcon } from './components/ui/CommentIcon.js'
 import { getDocumentIdFromUrl } from './utils/url.js'
-import { CommentClientFeatureProps } from './types.js'
+import { CommentClientFeatureProps } from './types/props.js'
 
 export const CommentClientFeature = createClientFeature<CommentClientFeatureProps>(
   ({ props }) => {

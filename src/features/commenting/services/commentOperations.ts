@@ -1,9 +1,13 @@
 'use client'
 
 import type { LexicalEditor } from '@payloadcms/richtext-lexical/lexical'
-import type { Comment, CommentDeletionResult, MarkNodeMapType, Thread } from '../types.js'
+import type { Comment, CommentDeletionResult, MarkNodeMapType, Thread } from '../types/core.js'
 import type { CommentStore } from '../store.js'
-import { API_ENDPOINTS } from '../api/commentService.js'
+import type { ICommentOperations } from '../types/services.js'
+import type { CommentAPIEntity } from '../types/api.js'
+import { API_ENDPOINTS } from '../types/api.js'
+import { APIUtils } from '../utils/api.js'
+import { withErrorHandling } from '../utils/errorHandling.js'
 import {
   $isMarkNode,
   $unwrapMarkNode,
@@ -18,7 +22,7 @@ import {
 /**
  * Service for handling comment operations
  */
-export class CommentOperations {
+export class CommentOperations implements ICommentOperations {
   /**
    * Delete a comment or thread
    * @param commentStore The comment store instance
@@ -37,112 +41,78 @@ export class CommentOperations {
     thread?: Thread,
     saveDocumentCallback?: () => Promise<void | boolean>
   ): Promise<CommentDeletionResult | null> {
-    if (comment.type === 'comment') {
-      const deletionInfo = commentStore.deleteCommentOrThread(
-        comment,
-        thread,
-      )
-      if (!deletionInfo) {
-        return null;
-      }
-      const { markedComment, index } = deletionInfo
-      
-      // Mark as deleted in the database using Payload's built-in REST API
-      try {
-        const response = await fetch(`${API_ENDPOINTS.COMMENTS}/${comment.id}`, {
-          method: 'PATCH',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
+    return withErrorHandling(
+      async () => {
+        if (comment.type === 'comment') {
+          const deletionInfo = commentStore.deleteCommentOrThread(
+            comment,
+            thread,
+          )
+          if (!deletionInfo) {
+            return null
+          }
+          const { markedComment, index } = deletionInfo
+          
+          // Mark as deleted in the database using Payload's built-in REST API
+          await APIUtils.patch(`${API_ENDPOINTS.COMMENTS}/${comment.id}`, {
             resolved: true, // Use resolved field to mark as deleted
-          }),
-        });
-        
-        if (!response.ok) {
-          console.error(`Failed to mark comment ${comment.id} as deleted:`, response.status, response.statusText);
-        }
-      } catch (error) {
-        console.error('Error marking comment as deleted:', error);
-      }
-      
-      commentStore.addComment(markedComment, thread, index);
-      return deletionInfo;
-    } else {
-      commentStore.deleteCommentOrThread(comment);
-      
-      // Mark thread as resolved in the database using Payload's built-in REST API
-      // Update all comments with this threadId
-      try {
-        const threadUrl = `${API_ENDPOINTS.COMMENTS}?where[threadId][equals]=${comment.id}`;
-        const response = await fetch(threadUrl, {
-          method: 'GET',
-        });
-        
-        if (response.ok) {
-          const data = await response.json();
+          })
+          
+          commentStore.addComment(markedComment, thread, index)
+          return deletionInfo
+        } else {
+          commentStore.deleteCommentOrThread(comment)
+          
+          // Mark thread as resolved in the database using Payload's built-in REST API
+          // Update all comments with this threadId
+          const threadId = comment.id
+          const params = { 'where[threadId][equals]': threadId }
+          const data = await APIUtils.getPaginated<CommentAPIEntity>(API_ENDPOINTS.COMMENTS, params)
           
           // For each comment in the thread, mark it as resolved
           if (data.docs && Array.isArray(data.docs)) {
-            const updatePromises = data.docs.map(async (threadComment: any) => {
-              try {
-                const updateResponse = await fetch(`${API_ENDPOINTS.COMMENTS}/${threadComment.id}`, {
-                  method: 'PATCH',
-                  headers: {
-                    'Content-Type': 'application/json',
-                  },
-                  body: JSON.stringify({
-                    resolved: true,
-                  }),
-                });
-                
-                if (!updateResponse.ok) {
-                  console.error(`Failed to mark thread comment ${threadComment.id} as deleted:`, 
-                    updateResponse.status, updateResponse.statusText);
-                }
-              } catch (error) {
-                console.error(`Error marking thread comment ${threadComment.id} as deleted:`, error);
-              }
-            });
+            const updatePromises = data.docs.map(async (threadComment: CommentAPIEntity) => {
+              return APIUtils.patch(`${API_ENDPOINTS.COMMENTS}/${threadComment.id}`, {
+                resolved: true,
+              })
+            })
             
             // Wait for all updates to complete
-            await Promise.all(updatePromises);
+            await Promise.all(updatePromises)
           }
-        } else {
-          console.error(`Failed to fetch thread comments:`, response.status, response.statusText);
-        }
-      } catch (error) {
-        console.error('Error fetching thread comments:', error);
-      }
-      
-      // Remove ids from associated marks
-      const id = thread !== undefined ? thread.id : comment.id;
-      const markNodeKeys = markNodeMap.get(id);
-      
-      if (markNodeKeys !== undefined) {
-        // Do async to avoid causing a React infinite loop
-        setTimeout(async () => {
-          editor.update(() => {
-            for (const key of markNodeKeys) {
-              const node: null | MarkNode = $getNodeByKey(key);
-              if ($isMarkNode(node)) {
-                node.deleteID(id);
-                if (node.getIDs().length === 0) {
-                  $unwrapMarkNode(node);
-                }
-              }
-            }
-          });
           
-          // Save the document after removing comment marks
-          if (saveDocumentCallback) {
-            await saveDocumentCallback();
+          // Remove ids from associated marks
+          const id = thread !== undefined ? thread.id : comment.id
+          const markNodeKeys = markNodeMap.get(id)
+          
+          if (markNodeKeys !== undefined) {
+            // Do async to avoid causing a React infinite loop
+            setTimeout(async () => {
+              editor.update(() => {
+                for (const key of markNodeKeys) {
+                  const node: null | MarkNode = $getNodeByKey(key)
+                  if ($isMarkNode(node)) {
+                    node.deleteID(id)
+                    if (node.getIDs().length === 0) {
+                      $unwrapMarkNode(node)
+                    }
+                  }
+                }
+              })
+              
+              // Save the document after removing comment marks
+              if (saveDocumentCallback) {
+                await saveDocumentCallback()
+              }
+            })
           }
-        });
-      }
-      
-      return null;
-    }
+          
+          return null
+        }
+      },
+      'Error deleting comment or thread',
+      null
+    )
   }
 
   /**
@@ -164,27 +134,33 @@ export class CommentOperations {
     selection?: any,
     saveDocumentCallback?: () => Promise<void | boolean>
   ): Promise<void> {
-    // Use saveComment instead of addComment to persist to database
-    await commentStore.saveComment(commentOrThread, thread);
-    
-    if (isInlineComment && selection) {
-      editor.update(() => {
-        if ($isRangeSelection(selection)) {
-          const isBackward = selection.isBackward();
-          const id = commentOrThread.id;
+    return withErrorHandling(
+      async () => {
+        // Use saveComment instead of addComment to persist to database
+        await commentStore.saveComment(commentOrThread, thread)
+        
+        if (isInlineComment && selection) {
+          editor.update(() => {
+            if ($isRangeSelection(selection)) {
+              const isBackward = selection.isBackward()
+              const id = commentOrThread.id
 
-          // Wrap content in a MarkNode
-          $wrapSelectionInMarkNode(selection, isBackward, id);
+              // Wrap content in a MarkNode
+              $wrapSelectionInMarkNode(selection, isBackward, id)
+            }
+          })
+          
+          // Save the document after adding a comment
+          if (saveDocumentCallback) {
+            await saveDocumentCallback()
+          }
         }
-      });
-      
-      // Save the document after adding a comment
-      if (saveDocumentCallback) {
-        await saveDocumentCallback();
-      }
-    }
+      },
+      'Error submitting comment',
+      undefined
+    )
   }
 }
 
 // Export a singleton instance
-export const commentOperations = new CommentOperations();
+export const commentOperations = new CommentOperations()

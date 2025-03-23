@@ -1,4 +1,6 @@
-import { Comment, Thread } from '../types.js'
+'use client'
+
+import type { Comment, Thread } from '../types/core.js'
 import { createUID } from './id.js'
 
 /**

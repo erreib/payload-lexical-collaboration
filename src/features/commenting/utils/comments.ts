@@ -1,6 +1,8 @@
 'use client'
 
-import { Comment, Thread } from '../types.js'
+import type { Comment, Thread } from '../types/core.js'
+import type { ErrorResponse } from '../types/api.js'
+import { APIUtils } from './api.js'
 
 /**
  * Checks if a comment already exists in a thread
@@ -9,7 +11,7 @@ import { Comment, Thread } from '../types.js'
  * @returns True if the comment already exists in the thread, false otherwise
  */
 export function isCommentDuplicateInThread(thread: Thread, comment: Comment): boolean {
-  return thread.comments.some(c => c.id === comment.id);
+  return thread.comments.some(c => c.id === comment.id)
 }
 
 /**
@@ -21,7 +23,7 @@ export function isCommentDuplicateInThread(thread: Thread, comment: Comment): bo
 export function isThreadDuplicate(comments: (Comment | Thread)[], thread: Thread): boolean {
   return comments.some(c => 
     c.type === 'thread' && c.id === thread.id
-  );
+  )
 }
 
 /**
@@ -29,10 +31,8 @@ export function isThreadDuplicate(comments: (Comment | Thread)[], thread: Thread
  * @param message The error message
  * @param details Additional error details
  * @returns A standardized error object
+ * @deprecated Use APIUtils.createErrorResponse instead
  */
-export function createErrorResponse(message: string, details?: any): { error: string; details?: any } {
-  return {
-    error: message,
-    ...(details ? { details } : {})
-  };
+export function createErrorResponse(message: string, details?: any): ErrorResponse {
+  return APIUtils.createErrorResponse(message, details)
 }

@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect } from 'react'
 import type { LexicalEditor, NodeKey } from '@payloadcms/richtext-lexical/lexical'
-import type { CommentCommandsResult } from '../../types.js'
+import type { CommentCommandsResult } from '../../types/hooks.js'
 import {
   $getSelection,
   COMMAND_PRIORITY_CRITICAL,

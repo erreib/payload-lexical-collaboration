@@ -1,6 +1,7 @@
 'use client'
 
-import type { Comment, CommentsPanelProps, Thread } from '../../types.js'
+import type { Comment, Thread } from '../../types/core.js'
+import type { CommentsPanelProps } from '../../types/props.js'
 
 import React, { useRef } from 'react'
 import { createComment } from '../../utils/factory.js'

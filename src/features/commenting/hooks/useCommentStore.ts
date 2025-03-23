@@ -1,6 +1,8 @@
+'use client'
+
 import { useState, useEffect } from 'react'
-import { Comments } from '../types.js'
-import { CommentStore } from '../store.js'
+import type { Comments } from '../types/core.js'
+import type { CommentStore } from '../store.js'
 
 /**
  * React hook to use the comment store
