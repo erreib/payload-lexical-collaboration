@@ -1,6 +1,6 @@
 {
   "name": "payload-lexical-collaboration",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A Payload CMS Lexical editor plugin that adds collaborative commenting functionality",
   "license": "MIT",
   "type": "module",
