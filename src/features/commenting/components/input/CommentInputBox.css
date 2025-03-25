@@ -4,7 +4,7 @@
 
 .CommentPlugin_CommentInputBox {
   display: block;
-  position: fixed;
+  position: absolute;
   width: 250px;
   min-height: 80px;
   max-height: calc(100vh - 40px); /* Leave space for margins */

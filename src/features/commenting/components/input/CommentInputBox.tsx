@@ -21,6 +21,7 @@ export const CommentInputBox: React.FC<CommentInputBoxProps> = ({
   const [content, setContent] = useState('')
   const [canSubmit, setCanSubmit] = useState(false)
   const boxRef = useRef<HTMLDivElement>(null)
+  const textareaRef = useRef<HTMLTextAreaElement>(null)
   const selectionState = useMemo(
     () => ({
       container: document.createElement('div'),
@@ -46,26 +47,38 @@ export const CommentInputBox: React.FC<CommentInputBoxProps> = ({
           focus.offset,
         )
         const boxElem = boxRef.current
-        if (range !== null && boxElem !== null) {
-          const { left, top, bottom, width } = range.getBoundingClientRect()
+        const editorRoot = editor.getRootElement()
+        
+        if (range !== null && boxElem !== null && editorRoot !== null) {
+          const editorRect = editorRoot.getBoundingClientRect()
+          const rangeRect = range.getBoundingClientRect()
           const selectionRects = createRectsFromDOMRange(editor, range)
+          
+          // Calculate left position relative to viewport
           let correctedLeft =
-            selectionRects.length === 1 ? left + width / 2 - 125 : left - 125
-          if (correctedLeft < 10) {
-            correctedLeft = 10
-          }
-          boxElem.style.left = `${correctedLeft}px`
-          // Use viewport-relative positioning
+            selectionRects.length === 1 
+              ? rangeRect.left + rangeRect.width / 2 - 125 
+              : rangeRect.left - 125
+          
+          // Ensure the box stays within the editor bounds
+          correctedLeft = Math.max(10, Math.min(correctedLeft, editorRect.width - 260))
+          
+          // Calculate top position relative to viewport
           const viewportHeight = window.innerHeight
-          let topPosition = bottom + 20
+          let topPosition = rangeRect.bottom + window.scrollY + 20
           
-          // Ensure the form stays within viewport bounds
-          if (boxElem.offsetHeight && topPosition + boxElem.offsetHeight > viewportHeight) {
-            // Position above the selection if it would overflow bottom
-            topPosition = top - (boxElem.offsetHeight || 0) - 10
+          // If the box would overflow the viewport bottom, position it above the selection
+          const absoluteTop = rangeRect.bottom + 20 // Viewport-relative top position
+          if (boxElem.offsetHeight && absoluteTop + boxElem.offsetHeight > viewportHeight) {
+            topPosition = rangeRect.top + window.scrollY - (boxElem.offsetHeight + 10)
           }
           
-          boxElem.style.top = `${Math.max(10, topPosition)}px`
+          // Apply the calculated positions
+          boxElem.style.position = 'absolute'
+          boxElem.style.left = `${correctedLeft}px`
+          boxElem.style.top = `${topPosition}px`
+          
+          // Update highlight overlays
           const selectionRectsLength = selectionRects.length
           const { container } = selectionState
           const elements: Array<HTMLSpanElement> = selectionState.elements
@@ -80,7 +93,6 @@ export const CommentInputBox: React.FC<CommentInputBoxProps> = ({
               container.appendChild(elem)
             }
             const color = '255, 212, 0'
-            // Keep highlight overlay in document flow
             const style = `position:absolute;top:${
               selectionRect.top + window.scrollY
             }px;left:${selectionRect.left}px;height:${
@@ -90,6 +102,8 @@ export const CommentInputBox: React.FC<CommentInputBoxProps> = ({
             }px;background-color:rgba(${color}, 0.3);pointer-events:none;z-index:5;`
             elem.style.cssText = style
           }
+          
+          // Clean up any extra highlight elements
           for (let i = elementsLength - 1; i >= selectionRectsLength; i--) {
             const elem = elements[i]
             container.removeChild(elem)
@@ -114,11 +128,23 @@ export const CommentInputBox: React.FC<CommentInputBoxProps> = ({
 
   useEffect(() => {
     window.addEventListener('resize', updateLocation)
+    window.addEventListener('scroll', updateLocation, true)
 
     return () => {
       window.removeEventListener('resize', updateLocation)
+      window.removeEventListener('scroll', updateLocation, true)
     }
   }, [updateLocation])
+
+  // Focus the textarea after a small delay to prevent scroll jump
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      if (textareaRef.current) {
+        textareaRef.current.focus()
+      }
+    }, 0)
+    return () => clearTimeout(timeoutId)
+  }, [])
 
   const submitComment = () => {
     if (canSubmit) {
@@ -163,12 +189,12 @@ export const CommentInputBox: React.FC<CommentInputBoxProps> = ({
     <div className="CommentPlugin_CommentInputBox" ref={boxRef}>
       <div className="CommentPlugin_CommentInputBox_EditorContainer">
         <textarea
+          ref={textareaRef}
           className="CommentPlugin_CommentInputBox_Editor"
           placeholder="Type a comment..."
           value={content}
           onChange={handleInputChange}
           onKeyDown={handleKeyDown}
-          autoFocus
         />
       </div>
       <div className="CommentPlugin_CommentInputBox_Buttons">
