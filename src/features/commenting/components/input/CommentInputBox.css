@@ -4,9 +4,11 @@
 
 .CommentPlugin_CommentInputBox {
   display: block;
-  position: absolute;
+  position: fixed;
   width: 250px;
   min-height: 80px;
+  max-height: calc(100vh - 40px); /* Leave space for margins */
+  overflow-y: auto;
   background-color: var(--theme-input-bg);
   box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.1);
   border-radius: 5px;
@@ -96,6 +98,7 @@
 
 .CommentPlugin_CommentInputBox_Editor {
   position: relative;
+  max-height: calc(100vh - 200px); /* Leave space for buttons and margins */
   border: 1px solid var(--theme-elevation-200, #e0e0e0);
   background-color: var(--theme-input-bg, #fff);
   border-radius: 5px;

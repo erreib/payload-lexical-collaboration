@@ -47,7 +47,7 @@ export const CommentInputBox: React.FC<CommentInputBoxProps> = ({
         )
         const boxElem = boxRef.current
         if (range !== null && boxElem !== null) {
-          const { left, bottom, width } = range.getBoundingClientRect()
+          const { left, top, bottom, width } = range.getBoundingClientRect()
           const selectionRects = createRectsFromDOMRange(editor, range)
           let correctedLeft =
             selectionRects.length === 1 ? left + width / 2 - 125 : left - 125
@@ -55,11 +55,17 @@ export const CommentInputBox: React.FC<CommentInputBoxProps> = ({
             correctedLeft = 10
           }
           boxElem.style.left = `${correctedLeft}px`
-          boxElem.style.top = `${
-            bottom +
-            20 +
-            (window.pageYOffset || document.documentElement.scrollTop)
-          }px`
+          // Use viewport-relative positioning
+          const viewportHeight = window.innerHeight
+          let topPosition = bottom + 20
+          
+          // Ensure the form stays within viewport bounds
+          if (boxElem.offsetHeight && topPosition + boxElem.offsetHeight > viewportHeight) {
+            // Position above the selection if it would overflow bottom
+            topPosition = top - (boxElem.offsetHeight || 0) - 10
+          }
+          
+          boxElem.style.top = `${Math.max(10, topPosition)}px`
           const selectionRectsLength = selectionRects.length
           const { container } = selectionState
           const elements: Array<HTMLSpanElement> = selectionState.elements
@@ -74,9 +80,9 @@ export const CommentInputBox: React.FC<CommentInputBoxProps> = ({
               container.appendChild(elem)
             }
             const color = '255, 212, 0'
+            // Keep highlight overlay in document flow
             const style = `position:absolute;top:${
-              selectionRect.top +
-              (window.pageYOffset || document.documentElement.scrollTop)
+              selectionRect.top + window.scrollY
             }px;left:${selectionRect.left}px;height:${
               selectionRect.height
             }px;width:${
