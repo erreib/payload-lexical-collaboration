@@ -11,3 +11,7 @@
 .editor-container [data-lexical-mark].selected {
   background-color: rgba(255, 212, 0, 0.7);
 }
+
+mark {
+  color: unset;
+}
