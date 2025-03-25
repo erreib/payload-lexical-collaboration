@@ -1,5 +1,5 @@
 import { sqliteAdapter } from '@payloadcms/db-sqlite'
-import { lexicalEditor } from '@payloadcms/richtext-lexical'
+import { lexicalEditor, FixedToolbarFeature } from '@payloadcms/richtext-lexical'
 import path from 'path'
 import { buildConfig } from 'payload'
 import { payloadLexicalCollaboration, CommentFeature } from 'payload-lexical-collaboration'
@@ -70,6 +70,7 @@ export default buildConfig({
     features: ({ defaultFeatures }) => [
       ...defaultFeatures,
       CommentFeature(),
+      FixedToolbarFeature(),
     ],
   }),
   email: testEmailAdapter,
