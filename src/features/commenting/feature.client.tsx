@@ -52,7 +52,8 @@ export const CommentClientFeature = createClientFeature<CommentClientFeatureProp
         },
       ],
       toolbarFixed: {
-        groups: [
+        groups: [], // Commented out temporarily until toolbar buttons are fixed
+        /* groups: [
           {
             type: 'dropdown',
             ChildComponent: CommentIcon,
@@ -76,10 +77,11 @@ export const CommentClientFeature = createClientFeature<CommentClientFeatureProp
               },
             ],
           },
-        ],
+        ], */
       },
       toolbarInline: {
-        groups: [
+        groups: [], // Commented out temporarily until toolbar buttons are fixed
+        /* groups: [
           {
             type: 'dropdown',
             ChildComponent: CommentIcon,
@@ -95,7 +97,7 @@ export const CommentClientFeature = createClientFeature<CommentClientFeatureProp
               },
             ],
           },
-        ],
+        ], */
       },
     }
   },
